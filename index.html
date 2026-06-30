@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MIRAI GUATEMALA v1.4 — Colección Paco</title>
+<title>Kibonsai — bonsái para Guatemala y el trópico</title>
 <style>
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -197,6 +197,10 @@ header{position:sticky;top:0;z-index:100;background:rgba(20,17,14,.86);backdrop-
 .ref-link:hover{text-decoration:underline}
 .ref-mini-list{display:flex;flex-direction:column;gap:.1rem}
 .ref-mini{font-size:.82rem;color:var(--hueso-mute);padding:.4rem 0;border-bottom:1px solid var(--sustrato-2);line-height:1.45}
+.card-overdue{position:absolute;top:.5rem;right:.5rem;background:var(--akadama);color:var(--volcanico);font-size:.6rem;letter-spacing:.04em;text-transform:uppercase;padding:.2rem .45rem;border-radius:6px;font-weight:600;z-index:2}
+.welcome-point{display:flex;gap:.7rem;align-items:flex-start;margin-bottom:.8rem;font-size:.92rem;color:var(--hueso-mute);line-height:1.5}
+.welcome-point b{color:var(--hueso)}
+.welcome-rule{width:3px;align-self:stretch;min-height:2.4em;background:var(--st);border-radius:2px;flex:none}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 </style>
@@ -204,7 +208,7 @@ header{position:sticky;top:0;z-index:100;background:rgba(20,17,14,.86);backdrop-
 <body>
 <header>
 <div class="header-c">
-<div class="brand">MIRAI <span class="brand-gt">GUATEMALA</span></div>
+<div class="brand">Kibon<span class="brand-gt">sai</span></div>
 <nav class="nav" aria-label="Secciones">
 <button class="nav-btn active" onclick="switchTab('dashboard',event)">Inicio</button>
 <button class="nav-btn" onclick="switchTab('trees',event)">Colección</button>
@@ -309,7 +313,10 @@ header{position:sticky;top:0;z-index:100;background:rgba(20,17,14,.86);backdrop-
       <input class="form-input" type="number" id="setTempDry" value="26">
       <label class="form-label mt-1">API Key OpenWeather (opcional)</label>
       <input class="form-input" id="setWeatherKey" placeholder="clima en vivo">
-      <button class="btn btn-primary btn-block mt-1" onclick="saveSettings()">💾 Guardar</button>
+      <label class="form-label mt-1">Recordame observar cada</label>
+      <select class="form-select" id="setRecordatorio"><option value="7">7 días</option><option value="14">14 días</option><option value="30">30 días</option></select>
+      <button class="btn btn-primary btn-block mt-1" onclick="saveSettings()">Guardar</button>
+      <button class="btn btn-secondary btn-block mt-1" onclick="openModal('modalWelcome')">Ver intro otra vez</button>
     </div>
     <div class="mt-2">
       <label class="form-label">Respaldo de Datos</label>
@@ -372,6 +379,18 @@ header{position:sticky;top:0;z-index:100;background:rgba(20,17,14,.86);backdrop-
 </div>
 </div>
 
+<div id="modalWelcome" class="modal">
+<div class="modal-content">
+<div class="modal-header"><h2 class="modal-title">Bienvenido a Kibonsai</h2><button class="close-modal" onclick="cerrarWelcome()">×</button></div>
+<p style="font-family:var(--font-display);font-size:1.12rem;color:var(--hueso);line-height:1.4;margin-bottom:1.1rem">Bonsái para Guatemala y el trópico — donde manda el árbol, no el calendario.</p>
+<div class="welcome-point"><span class="welcome-rule" style="--st:var(--st-go)"></span><div><b>Observá, no obedezcas.</b> La app no te dice “podá hoy”. Te lleva a mirar el árbol, y él decide.</div></div>
+<div class="welcome-point"><span class="welcome-rule" style="--st:var(--akadama)"></span><div><b>Hecho para el trópico.</b> Época seca, lluvia y transición — no las cuatro estaciones de los libros.</div></div>
+<div class="welcome-point"><span class="welcome-rule" style="--st:var(--st-transplant)"></span><div><b>Tu colección, tu ritmo.</b> Fotos, observaciones y la señal de cada árbol — todo guardado en tu teléfono.</div></div>
+<button class="btn btn-primary btn-block mt-2" onclick="onboardAdd()">Agregá tu primer árbol</button>
+<button class="btn btn-secondary btn-block mt-1" onclick="cerrarWelcome()">Explorar primero</button>
+</div>
+</div>
+
 <div id="modalObs" class="modal">
 <div class="modal-content">
 <div class="modal-header"><h2 class="modal-title" id="obsTitle">🔍 Observar árbol</h2><button class="close-modal" onclick="closeModal('modalObs')">×</button></div>
@@ -405,7 +424,7 @@ header{position:sticky;top:0;z-index:100;background:rgba(20,17,14,.86);backdrop-
 </div>
 
 <script>
-const APP={trees:[],currentTreeId:null,obsState:{},settings:{name:'Colección Paco Arriaza',location:'Ciudad de Guatemala, rooftop',tempDry:26,weatherKey:''}};
+const APP={trees:[],currentTreeId:null,obsState:{},settings:{name:'Colección Paco Arriaza',location:'Ciudad de Guatemala, rooftop',tempDry:26,weatherKey:'',recordatorioDias:14}};
 
 /* ===== v1.3 CP2: catálogo de especies tropicalizado (Estávios + GT) ===== */
 const SPECIES=[
@@ -521,7 +540,7 @@ function renderCalendario(){
 function openCalWindow(cat,ventana){
   const trees=APP.trees.filter(t=>calCategoria(t)===cat);
   let html=`<p class="text-sm text-muted">Ventana esperada: <b>${ventana}</b>. Toca un árbol para observarlo — el motor decide si hay ventana real.</p>`;
-  if(!trees.length){html+='<p class="text-muted mt-1">No tienes árboles de esta categoría.</p>';}
+  if(!trees.length){html+='<p class="text-muted mt-1">Todavía no tenés árboles de esta categoría.</p>';}
   else{
     html+='<div class="cal-list">'+trees.map(t=>{
       const st=stateOf(t);const cover=coverPhoto(t);
@@ -682,7 +701,7 @@ function normalizeTree(t){
 function init(){
   loadFromStorage();
   if(APP.trees.length===0)loadSampleData();
-  renderEpoca();updateWeather();updateAlerts();renderVigorGrid();populateSpeciesPicker();seedReferencias();
+  renderEpoca();updateWeather();updateAlerts();renderVigorGrid();populateSpeciesPicker();seedReferencias();maybeWelcome();
   setInterval(updateWeather,600000);
 }
 
@@ -732,10 +751,16 @@ function updateAlerts(){
     else if(o.verdict==='transplant')alerts.push({t:'info',i:'🪴',ti:'#'+t.num+' '+t.name+': candidato a trasplante',d:o.summary});
     else if(o.verdict==='wait')alerts.push({t:'info',i:'⏳',ti:'#'+t.num+' '+t.name+': en recuperación',d:o.summary});
   });
+  const umbral=recordatorioDias();
+  APP.trees.forEach(t=>{
+    if(!t.lastObs)return;
+    const d=diasSinObservar(t);
+    if(d!==null&&d>=umbral)alerts.push({t:'warning',i:'·',ti:'#'+t.num+' '+t.name+': toca revisarlo',d:'Fijate, no lo observás hace '+d+' días. ¿Cómo andan sus brotes?',obs:t.id});
+  });
   const nunca=APP.trees.filter(t=>!t.lastObs);
-  if(nunca.length>0)alerts.push({t:'info',i:'🔍',ti:nunca.length+' árbol(es) sin observar',d:'Abre cada árbol y registra su primera observación para activar el motor.'});
-  if(alerts.length===0)alerts.push({t:'success',i:'✅',ti:'Todo en orden',d:'Sin banderas activas. Continúa monitoreo en '+e.nombre.toLowerCase()+'.'});
-  document.getElementById('alertsContainer').innerHTML=alerts.map(a=>`<div class="alert ${a.t}"><div class="alert-icon">${a.i}</div><div><div class="alert-title">${a.ti}</div><div class="alert-desc">${a.d}</div></div></div>`).join('');
+  if(nunca.length>0)alerts.push({t:'info',i:'🔍',ti:nunca.length+' árbol(es) sin observar',d:'Fijate, abrí cada árbol y registrá su primera observación para encender el motor.'});
+  if(alerts.length===0)alerts.push({t:'success',i:'✅',ti:'Todo tranquilo',d:'Sin banderas por ahora. Seguí el monitoreo en '+e.nombre.toLowerCase()+'.'});
+  document.getElementById('alertsContainer').innerHTML=alerts.map(a=>{const c=a.obs?` onclick="openObs(${a.obs})" onkeydown="if(event.key==='Enter')openObs(${a.obs})" role="button" tabindex="0" style="cursor:pointer"`:'';return `<div class="alert ${a.t}"${c}><div class="alert-icon">${a.i}</div><div><div class="alert-title">${a.ti}</div><div class="alert-desc">${a.d}</div></div></div>`;}).join('');
 }
 
 function openObs(treeId){
@@ -880,10 +905,81 @@ function stateOf(t){
   const c={go:'var(--st-go)',wait:'var(--st-wait)',stop:'var(--st-stop)',transplant:'var(--st-transplant)'}[v]||'var(--akadama)';
   return{color:c,label:t.lastObs.summary||'—'};
 }
+function diasSinObservar(t){
+  const ref=(t.lastObs&&t.lastObs.date)?t.lastObs.date:t.createdAt;
+  if(!ref)return null;
+  return Math.floor((Date.now()-new Date(ref).getTime())/86400000);
+}
+function recordatorioDias(){return (APP.settings&&APP.settings.recordatorioDias)||14;}
+function tocaObservar(t){const d=diasSinObservar(t);return t.lastObs&&d!==null&&d>=recordatorioDias();}
+function overdueBadge(t){return tocaObservar(t)?`<div class="card-overdue" title="Toca observarlo"><span aria-hidden="true">\u00b7</span> ${diasSinObservar(t)}d sin ver</div>`:'';}
+function setOnboarded(){try{localStorage.setItem('kibonsai_onboarded','1');}catch(_){}}
+function cerrarWelcome(){setOnboarded();closeModal('modalWelcome');}
+function onboardAdd(){setOnboarded();closeModal('modalWelcome');openModal('modalAddTree');}
+function maybeWelcome(){let seen;try{seen=localStorage.getItem('kibonsai_onboarded');}catch(_){seen='1';}if(!seen)openModal('modalWelcome');}
+function stateHex(t){
+  if(!t.lastObs)return '#B98A52';
+  return {go:'#7C9A6B',wait:'#C8954A',stop:'#B5563F',transplant:'#5E7E94'}[t.lastObs.verdict]||'#B98A52';
+}
+function compartirArbol(id){
+  const t=getTree(id); if(!t)return;
+  const W=1080,H=1350,ph=880;
+  const c=document.createElement('canvas'); c.width=W; c.height=H;
+  const ctx=c.getContext&&c.getContext('2d');
+  if(!ctx){alert('Tu navegador no soporta generar la imagen para compartir.');return;}
+  const st=stateOf(t);
+  const draw=(img)=>{
+    ctx.fillStyle='#14110E'; ctx.fillRect(0,0,W,H);
+    if(img){
+      const sc=Math.max(W/img.width, ph/img.height);
+      const iw=img.width*sc, ih=img.height*sc;
+      try{ctx.drawImage(img,(W-iw)/2,(ph-ih)/2,iw,ih);}catch(_){}
+    }else{
+      ctx.fillStyle='#1F1A14'; ctx.fillRect(0,0,W,ph);
+      ctx.fillStyle='#B98A52'; ctx.font='bold 180px Georgia, serif'; ctx.textAlign='center';
+      ctx.fillText('#'+t.num,W/2,ph/2+60);
+    }
+    const g=ctx.createLinearGradient(0,ph-320,0,ph);
+    g.addColorStop(0,'rgba(20,17,14,0)'); g.addColorStop(1,'rgba(20,17,14,1)');
+    ctx.fillStyle=g; ctx.fillRect(0,ph-320,W,320);
+    ctx.textAlign='left';
+    ctx.fillStyle='#9C9384'; ctx.font='600 30px Georgia, serif';
+    ctx.fillText('#'+t.num+'   ·   '+(t.tier||'').toUpperCase(),72,ph+64);
+    ctx.fillStyle='#ECE6DA'; ctx.font='66px Georgia, "Palatino Linotype", serif';
+    ctx.fillText(t.name,72,ph+146);
+    ctx.fillStyle=stateHex(t); ctx.fillRect(72,ph+182,8,48);
+    ctx.fillStyle='#ECE6DA'; ctx.font='42px Georgia, serif';
+    ctx.fillText(st.label,98,ph+220);
+    ctx.fillStyle='#9C9384'; ctx.font='32px Georgia, serif';
+    ctx.fillText((t.species||''),72,ph+286);
+    ctx.fillStyle='#C9A24B'; ctx.font='600 40px Georgia, serif';
+    ctx.fillText('Kibonsai',72,H-58);
+    ctx.fillStyle='#9C9384'; ctx.font='28px Georgia, serif';
+    ctx.fillText('bonsái del trópico',72,H-22);
+    try{ c.toBlob(b=>compartirBlob(b,t),'image/jpeg',0.92); }
+    catch(_){ alert('No se pudo generar la imagen.'); }
+  };
+  const cover=coverPhoto(t);
+  if(cover){const img=new Image();img.onload=()=>draw(img);img.onerror=()=>draw(null);img.src=cover;}
+  else draw(null);
+}
+function compartirBlob(blob,t){
+  if(!blob){alert('No se pudo generar la imagen.');return;}
+  try{
+    const file=new File([blob],'kibonsai-'+t.num+'.jpg',{type:'image/jpeg'});
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+      navigator.share({files:[file],title:t.name,text:'#'+t.num+' '+t.name+' — vía Kibonsai'}).catch(()=>{});
+      return;
+    }
+  }catch(_){}
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='kibonsai-'+t.num+'.jpg'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),2000);
+}
 function renderTreeCard(t){
   const cover=coverPhoto(t); const st=stateOf(t);
   const media=cover?`<img class="card-photo" src="${cover}" alt="#${t.num} ${t.name}">`:`<div class="card-photo card-noimg"><span>#${t.num}</span><small class="eyebrow">sin foto</small></div>`;
-  return `<article class="tree-card tier-${t.tier}" tabindex="0" role="button" aria-label="Ver #${t.num} ${t.name}" onclick="viewTree(${t.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();viewTree(${t.id});}"><div class="card-media">${media}<div class="card-grad"></div><div class="card-meta"><div class="eyebrow">#${t.num} · ${(t.tier||'').toUpperCase()}</div><div class="card-name">${t.name}</div></div></div><div class="state-line" style="--st:${st.color}"><span class="state-rule"></span><span class="state-text">${st.label}</span></div></article>`;
+  return `<article class="tree-card tier-${t.tier}" tabindex="0" role="button" aria-label="Ver #${t.num} ${t.name}" onclick="viewTree(${t.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();viewTree(${t.id});}"><div class="card-media">${media}${overdueBadge(t)}<div class="card-grad"></div><div class="card-meta"><div class="eyebrow">#${t.num} · ${(t.tier||'').toUpperCase()}</div><div class="card-name">${t.name}</div></div></div><div class="state-line" style="--st:${st.color}"><span class="state-rule"></span><span class="state-text">${st.label}</span></div></article>`;
 }
 function obsIcon(v){return v==='go'?'✅':v==='wait'?'⏳':v==='stop'?'🛑':v==='transplant'?'🪴':'•';}
 function renderVigorGrid(){document.getElementById('vigorGrid').innerHTML=APP.trees.map(renderTreeCard).join('');}
@@ -902,6 +998,7 @@ function viewTree(id){
     <h2 class="detail-name">${t.name}</h2>
     <div class="ficha eyebrow">${t.species||'—'} · ${t.style||'—'}</div>${fichaMeta(t)}
     <button class="btn btn-primary btn-block" onclick="openObs(${id})">Observar ahora</button>
+    <button class="btn btn-secondary btn-block mt-1" onclick="compartirArbol(${id})">Compartir</button>
     <div class="detail-section"><div class="vigor-lbl">Vigor ${t.vigor}/5</div><input class="vigor-range" type="range" min="1" max="5" value="${t.vigor}" onchange="setVigor(${id},this.value)"></div>
     <div class="detail-section"><div class="eyebrow">Balcón actual</div><select class="form-select" onchange="setBalcon(${id},this.value)"><option value="">— sin asignar —</option>${BALCONES.map(b=>'<option value="'+b.id+'" '+(t.balcon===b.id?'selected':'')+'>'+b.nombre+'</option>').join('')}</select></div>
     <div class="detail-section"><div class="flex-between"><span class="eyebrow">Fotos ${photos.length}</span><button class="btn btn-ghost btn-sm2" onclick="openPhoto(${id})">+ Foto</button></div></div>
@@ -1019,9 +1116,10 @@ function switchTab(name,e){
   if(name==='dashboard'){renderEpoca();updateAlerts();renderVigorGrid();}
 }
 
-function saveToStorage(){localStorage.setItem('mirai_gt_v11',JSON.stringify({trees:APP.trees,settings:APP.settings,referencias:APP.referencias}));}
+function saveToStorage(){localStorage.setItem('kibonsai_v1',JSON.stringify({trees:APP.trees,settings:APP.settings,referencias:APP.referencias}));}
 function loadFromStorage(){
-  const d=localStorage.getItem('mirai_gt_v11');
+  let d=localStorage.getItem('kibonsai_v1');
+  if(!d){const _old=localStorage.getItem('mirai_gt_v11');if(_old){d=_old;try{localStorage.setItem('kibonsai_v1',_old);}catch(_){}}}
   if(!d)return;
   try{
     const p=JSON.parse(d);
@@ -1030,26 +1128,26 @@ function loadFromStorage(){
     APP.referencias=Array.isArray(p.referencias)?p.referencias:[];
   }catch(err){
     console.error('localStorage corrupto — respaldo y reinicio de datos',err);
-    try{localStorage.setItem('mirai_gt_v11_corrupto_'+Date.now(),d);}catch(_){}
+    try{localStorage.setItem('kibonsai_v1_corrupto_'+Date.now(),d);}catch(_){}
     APP.trees=[];
   }
-  setVal('setName',APP.settings.name);setVal('setLocation',APP.settings.location);setVal('setTempDry',APP.settings.tempDry);setVal('setWeatherKey',APP.settings.weatherKey);
+  setVal('setName',APP.settings.name);setVal('setLocation',APP.settings.location);setVal('setTempDry',APP.settings.tempDry);setVal('setWeatherKey',APP.settings.weatherKey);setVal('setRecordatorio',APP.settings.recordatorioDias||14);
 }
 function saveSettings(){
   APP.settings.name=val('setName');APP.settings.location=val('setLocation');
-  APP.settings.tempDry=parseInt(val('setTempDry'))||26;APP.settings.weatherKey=val('setWeatherKey');
-  saveToStorage();updateWeather();alert('✅ Configuración guardada');
+  APP.settings.tempDry=parseInt(val('setTempDry'))||26;APP.settings.weatherKey=val('setWeatherKey');APP.settings.recordatorioDias=parseInt(val('setRecordatorio'))||14;
+  saveToStorage();updateWeather();alert('¡Cabal! Configuración guardada.');
 }
 function exportData(){
   const el=document.createElement('a');
   el.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify({trees:APP.trees,settings:APP.settings,referencias:APP.referencias},null,2));
-  el.download=`MiraiGT_backup_${new Date().toISOString().slice(0,10)}.json`;el.click();
+  el.download=`Kibonsai_backup_${new Date().toISOString().slice(0,10)}.json`;el.click();
 }
 function importData(){
   const i=document.createElement('input');i.type='file';i.accept='.json';
   i.onchange=e=>{const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);APP.trees=(d.trees||[]).map(normalizeTree).filter(Boolean);APP.settings=Object.assign(APP.settings,d.settings||{});APP.referencias=Array.isArray(d.referencias)?d.referencias:[];saveToStorage();location.reload();}catch(err){alert('Archivo inválido');}};r.readAsText(e.target.files[0]);};i.click();
 }
-function clearAllData(){if(confirm('⚠️ ¿Borrar TODO? No se puede deshacer.')){localStorage.removeItem('mirai_gt_v11');location.reload();}}
+function clearAllData(){if(confirm('¿Seguro que querés borrar TODO? Esto no se puede deshacer.')){localStorage.removeItem('kibonsai_v1');localStorage.removeItem('mirai_gt_v11');location.reload();}}
 
 function openModal(id){document.getElementById(id).classList.add('active');}
 function closeModal(id){document.getElementById(id).classList.remove('active');}
