@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIRAI GUATEMALA v1.4 — Colección Paco</title>
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --volcanico:#14110E; --sustrato:#1F1A14; --sustrato-2:#2A2218;
+  --akadama:#B98A52; --follaje:#7C9A6B; --oro:#C9A24B;
+  --hueso:#ECE6DA; --hueso-mute:#9C9384;
+  --st-go:#7C9A6B; --st-wait:#C8954A; --st-stop:#B5563F; --st-transplant:#5E7E94;
+  --seco:#C8954A; --lluvia:#5E7E94; --transicion:#A8B27E;
+  --font-display:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+  --font-ui:-apple-system,'SF Pro Text','Segoe UI',system-ui,sans-serif;
+  --radius:12px;
+}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--font-ui);background:var(--volcanico);color:var(--hueso);min-height:100vh;line-height:1.45}
+.eyebrow{font-family:var(--font-ui);font-size:.64rem;letter-spacing:.13em;text-transform:uppercase;color:var(--hueso-mute)}
+.text-sm{font-size:.85rem}.text-muted{color:var(--hueso-mute)}.text-center{text-align:center}
+.mt-1{margin-top:.8rem}.mt-2{margin-top:1.4rem}
+:focus-visible{outline:2px solid var(--akadama);outline-offset:2px}
+
+/* Header */
+header{position:sticky;top:0;z-index:100;background:rgba(20,17,14,.86);backdrop-filter:blur(8px);border-bottom:1px solid var(--sustrato-2)}
+.header-c{max-width:1100px;margin:0 auto;padding:.8rem 1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.brand{font-family:var(--font-display);font-size:1.25rem;letter-spacing:.02em;color:var(--hueso)}
+.brand-gt{color:var(--akadama)}
+.nav{display:flex;gap:.2rem;flex-wrap:wrap}
+.nav-btn{background:none;border:none;color:var(--hueso-mute);font-family:var(--font-ui);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;padding:.45rem .6rem;cursor:pointer;border-radius:6px;transition:color .2s,background .2s}
+.nav-btn:hover{color:var(--hueso)}
+.nav-btn.active{color:var(--volcanico);background:var(--akadama)}
+
+.container{max-width:1100px;margin:1.4rem auto;padding:0 1rem}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* Section */
+.section{margin-bottom:1.8rem}
+.section-title{font-family:var(--font-display);font-size:1.15rem;font-weight:normal;color:var(--hueso);margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem}
+.flex-between{display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap}
+
+/* Época + clima */
+.epoca-banner{display:flex;align-items:center;gap:.9rem;padding:.9rem 1rem;border-radius:var(--radius);background:var(--sustrato);border-left:3px solid var(--seco);margin-bottom:1.4rem}
+.epoca-lluvia{border-left-color:var(--lluvia)}
+.epoca-icon{font-size:1.6rem;opacity:.9}
+.epoca-text strong{display:block;font-family:var(--font-display);font-size:1rem;margin-bottom:.15rem}
+.epoca-text span{font-size:.85rem;color:var(--hueso-mute)}
+.weather{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.6rem;background:var(--sustrato);border-radius:var(--radius);padding:1rem}
+.weather-item{text-align:center}
+.weather-val{font-family:var(--font-display);font-size:1.5rem;color:var(--akadama)}
+.weather-lbl{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--hueso-mute)}
+
+/* Alerts */
+.alert{display:flex;gap:.7rem;align-items:flex-start;padding:.8rem .9rem;border-radius:10px;background:var(--sustrato);border-left:3px solid var(--hueso-mute);margin-bottom:.6rem}
+.alert.critical{border-left-color:var(--st-stop)}
+.alert.warning{border-left-color:var(--st-wait)}
+.alert.info{border-left-color:var(--st-transplant)}
+.alert.success{border-left-color:var(--st-go)}
+.alert-icon{font-size:1.1rem;flex:none;opacity:.9}
+.alert-title{font-weight:600;font-size:.92rem;margin-bottom:.1rem}
+.alert-desc{font-size:.84rem;color:var(--hueso-mute)}
+
+/* Galería */
+.trees-grid{display:grid;grid-template-columns:1fr;gap:1.1rem}
+@media(min-width:560px){.trees-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.trees-grid{grid-template-columns:repeat(3,1fr)}}
+.tree-card{cursor:pointer;border-radius:var(--radius);transition:transform .2s ease;background:transparent}
+.tree-card:hover{transform:translateY(-3px)}
+.card-media{position:relative;aspect-ratio:4/5;background:var(--sustrato);overflow:hidden;border-radius:var(--radius);border:1px solid var(--sustrato-2)}
+.card-photo{width:100%;height:100%;object-fit:cover;display:block}
+.card-noimg{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem}
+.card-noimg span{font-family:var(--font-display);font-size:1.7rem;color:var(--akadama)}
+.card-grad{position:absolute;inset:auto 0 0 0;height:55%;background:linear-gradient(transparent,rgba(20,17,14,.9))}
+.card-meta{position:absolute;left:.8rem;right:.8rem;bottom:.65rem}
+.card-name{font-family:var(--font-display);font-size:1.05rem;color:var(--hueso);line-height:1.15;margin-top:.15rem}
+.state-line{display:flex;align-items:center;gap:.5rem;padding:.5rem .15rem .2rem}
+.state-line--lg{padding:.7rem 0}
+.state-rule{width:3px;align-self:stretch;min-height:1.1em;background:var(--st);border-radius:2px;flex:none}
+.state-text{font-family:var(--font-display);font-size:.9rem;color:var(--hueso-mute)}
+.state-line--lg .state-text{font-size:1.05rem;color:var(--hueso)}
+
+/* Detalle */
+.detail-media{margin-bottom:.2rem}
+.detail-photo{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:var(--radius);background:var(--sustrato);display:block;border:1px solid var(--sustrato-2)}
+.detail-name{font-family:var(--font-display);font-weight:normal;font-size:1.5rem;margin:.1rem 0 .15rem}
+.ficha{margin-bottom:1rem}
+.detail-section{margin-top:1.3rem}
+.vigor-range{width:100%;margin-top:.4rem;accent-color:var(--follaje)}
+
+/* Timeline */
+.timeline{margin-top:.7rem;display:flex;flex-direction:column;gap:.7rem}
+.tl-item{display:flex;gap:.7rem;align-items:flex-start}
+.tl-thumb{width:46px;height:46px;border-radius:8px;object-fit:cover;flex:none;border:1px solid var(--sustrato-2)}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:var(--akadama);flex:none;margin:.35rem .35rem 0}
+.tl-body{flex:1;border-bottom:1px solid var(--sustrato-2);padding-bottom:.6rem}
+.tl-title{font-family:var(--font-display);font-size:.98rem}
+.tl-desc{margin-top:.15rem}
+
+/* Modales */
+.modal{display:none;position:fixed;inset:0;background:rgba(8,6,4,.7);z-index:1000;align-items:flex-end;justify-content:center;padding:0}
+.modal.active{display:flex}
+.modal-content{background:var(--sustrato);width:100%;max-width:560px;max-height:92vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:1.4rem 1.2rem 2rem;border:1px solid var(--sustrato-2)}
+@media(min-width:560px){.modal{align-items:center;padding:1rem}.modal-content{border-radius:16px}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem;padding-bottom:.7rem;border-bottom:1px solid var(--sustrato-2)}
+.modal-title{font-family:var(--font-display);font-size:1.05rem;font-weight:normal;color:var(--hueso)}
+.close-modal{background:none;border:none;font-size:1.6rem;line-height:1;color:var(--hueso-mute);cursor:pointer}
+.close-modal:hover{color:var(--hueso)}
+
+/* Forms */
+.form-group{margin-bottom:1rem}
+.form-label{display:block;margin-bottom:.35rem;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--hueso-mute)}
+.form-input,.form-select,.form-textarea{width:100%;padding:.7rem;border:1px solid var(--sustrato-2);border-radius:8px;font-size:1rem;font-family:inherit;background:var(--volcanico);color:var(--hueso)}
+.form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:var(--akadama)}
+.form-textarea{resize:vertical;min-height:70px}
+
+/* Botones */
+.btn{padding:.75rem 1.2rem;border:none;border-radius:9px;cursor:pointer;font-size:.92rem;font-weight:600;font-family:var(--font-ui);transition:opacity .2s,transform .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--follaje);color:var(--volcanico)}
+.btn-secondary{background:transparent;color:var(--hueso);border:1px solid var(--akadama)}
+.btn-ghost{background:var(--sustrato-2);color:var(--hueso)}
+.btn-block{width:100%;display:block;margin-top:.4rem}
+.btn-sm2{padding:.4rem .7rem;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em}
+
+/* Observación */
+.obs-question{background:var(--volcanico);border:1px solid var(--sustrato-2);border-radius:10px;padding:1rem;margin-bottom:.8rem}
+.obs-q-text{font-family:var(--font-display);font-size:1rem;color:var(--hueso);margin-bottom:.7rem}
+.obs-options{display:flex;gap:.5rem;flex-wrap:wrap}
+.obs-opt{flex:1;min-width:84px;padding:.65rem;border:1px solid var(--sustrato-2);border-radius:8px;background:var(--sustrato);color:var(--hueso-mute);cursor:pointer;text-align:center;font-size:.86rem;transition:.15s}
+.obs-opt:hover{border-color:var(--akadama);color:var(--hueso)}
+.obs-opt.selected{background:var(--follaje);color:var(--volcanico);border-color:var(--follaje)}
+.obs-opt.danger.selected{background:var(--st-stop);border-color:var(--st-stop);color:var(--hueso)}
+.obs-opt.warn.selected{background:var(--st-wait);border-color:var(--st-wait);color:var(--volcanico)}
+.obs-result{padding:1.1rem;border-radius:10px;margin-top:1rem;background:var(--volcanico);border-left:3px solid var(--hueso-mute)}
+.obs-result.go{border-left-color:var(--st-go)}
+.obs-result.wait{border-left-color:var(--st-wait)}
+.obs-result.stop{border-left-color:var(--st-stop)}
+.obs-result.transplant{border-left-color:var(--st-transplant)}
+.obs-result-title{font-family:var(--font-display);font-size:1.1rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem}
+.obs-result-body{font-size:.9rem;color:var(--hueso);line-height:1.5}
+.obs-result-body b{color:var(--hueso)}
+.obs-transversal{margin-top:.8rem;padding:.7rem;background:var(--sustrato-2);border-radius:8px;font-size:.85rem;color:var(--hueso-mute)}
+
+/* Fotos / logs sueltos */
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:.6rem;margin-top:.6rem}
+.photo-item{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--volcanico)}
+.photo-item img{width:100%;height:100%;object-fit:cover}
+.photo-date{position:absolute;inset:auto 0 0 0;background:rgba(8,6,4,.7);color:var(--hueso);padding:.2rem;font-size:.6rem;text-align:center}
+.log-entry{background:var(--volcanico);border:1px solid var(--sustrato-2);padding:.6rem;border-radius:8px;margin-bottom:.45rem;font-size:.88rem}
+.badge{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--hueso-mute)}
+.vigor-lbl{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--hueso-mute);margin-bottom:.3rem}
+.vigor-fill{height:4px;background:var(--sustrato-2);border-radius:3px;overflow:hidden}
+.vigor-level{height:100%;background:var(--follaje)}
+.pending-flag{background:rgba(185,138,82,.12);border:1px solid var(--akadama);border-radius:8px;padding:.6rem;font-size:.8rem;color:var(--akadama);margin-top:.5rem}
+
+.chips{display:flex;gap:.4rem;flex-wrap:wrap;margin:.1rem 0 .5rem}
+.chip{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--hueso);background:var(--sustrato-2);border-radius:6px;padding:.28rem .55rem}
+.cal-timeline{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-bottom:.3rem}
+.cal-seg{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--hueso-mute);padding:.32rem .6rem;border:1px solid var(--sustrato-2);border-radius:20px}
+.cal-seg.on{background:var(--akadama);color:var(--volcanico);border-color:var(--akadama)}
+.cal-arrow{color:var(--hueso-mute)}
+.cal-cat{margin-top:1.3rem}
+.cal-cat-h{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--sustrato-2);padding-bottom:.3rem;margin-bottom:.6rem}
+.cal-cat-name{font-family:var(--font-display);font-size:1.1rem}
+.cal-win{background:var(--sustrato);border-radius:10px;padding:.8rem;margin-bottom:.6rem;border-left:3px solid var(--hueso-mute)}
+.cal-win.principal{border-left-color:var(--st-go)}
+.cal-win.secundaria{border-left-color:var(--st-wait)}
+.cal-win.evitar{opacity:.55;border-left-color:var(--st-stop)}
+.cal-win-top{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.25rem}
+.cal-badge{font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:.22rem .45rem;border-radius:5px;background:var(--sustrato-2);color:var(--hueso)}
+.cal-badge.principal{background:var(--st-go);color:var(--volcanico)}
+.cal-badge.secundaria{background:var(--st-wait);color:var(--volcanico)}
+.cal-badge.evitar{background:var(--st-stop);color:var(--hueso)}
+.cal-win-name{font-family:var(--font-display);font-size:.98rem}
+.cal-win-sig{margin-bottom:.5rem}
+.cal-list{display:flex;flex-direction:column;gap:.5rem;margin-top:.7rem}
+.cal-row{display:flex;gap:.7rem;align-items:center;background:var(--volcanico);border:1px solid var(--sustrato-2);border-radius:10px;padding:.5rem;cursor:pointer}
+.cal-row:hover{border-color:var(--akadama)}
+.cal-thumb{width:46px;height:46px;border-radius:8px;object-fit:cover;flex:none}
+.cal-thumb-x{display:flex;align-items:center;justify-content:center;background:var(--sustrato);color:var(--akadama);font-family:var(--font-display);font-size:.85rem}
+.cal-row-b{flex:1}
+.cal-row-n{font-family:var(--font-display);font-size:.98rem;margin-bottom:.1rem}
+.asol-balcones{display:grid;grid-template-columns:1fr;gap:.6rem;margin-top:.8rem}
+@media(min-width:560px){.asol-balcones{grid-template-columns:repeat(3,1fr)}}
+.asol-bal{background:var(--sustrato);border-radius:10px;padding:.8rem;border-left:3px solid var(--akadama)}
+.asol-bal-n{font-family:var(--font-display);font-size:1rem;margin-bottom:.15rem}
+.asol-bal-w{margin-top:.4rem;font-family:var(--font-display);font-size:1.05rem;color:var(--akadama)}
+.asol-h{font-family:var(--font-display);font-weight:normal;font-size:1.1rem;margin:1.4rem 0 .2rem;border-bottom:1px solid var(--sustrato-2);padding-bottom:.3rem}
+.ref-list{display:flex;flex-direction:column;gap:.7rem}
+.ref-card{background:var(--sustrato);border-radius:10px;padding:.85rem;border-left:3px solid var(--akadama)}
+.ref-attr{margin-bottom:.25rem;color:var(--akadama)}
+.ref-nota{font-size:.92rem;line-height:1.5;color:var(--hueso)}
+.ref-link{display:inline-block;margin-top:.4rem;font-size:.8rem;color:var(--follaje);text-decoration:none}
+.ref-link:hover{text-decoration:underline}
+.ref-mini-list{display:flex;flex-direction:column;gap:.1rem}
+.ref-mini{font-size:.82rem;color:var(--hueso-mute);padding:.4rem 0;border-bottom:1px solid var(--sustrato-2);line-height:1.45}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+</style>
+</head>
+<body>
+<header>
+<div class="header-c">
+<div class="brand">MIRAI <span class="brand-gt">GUATEMALA</span></div>
+<nav class="nav" aria-label="Secciones">
+<button class="nav-btn active" onclick="switchTab('dashboard',event)">Inicio</button>
+<button class="nav-btn" onclick="switchTab('trees',event)">Colección</button>
+<button class="nav-btn" onclick="switchTab('calendario',event)">Calendario</button>
+<button class="nav-btn" onclick="switchTab('asoleamiento',event)">Sol</button>
+<button class="nav-btn" onclick="switchTab('referencias',event)">Maestros</button>
+<button class="nav-btn" onclick="switchTab('guide',event)">Guía</button>
+<button class="nav-btn" onclick="switchTab('report',event)">Reporte</button>
+<button class="nav-btn" onclick="switchTab('settings',event)">Ajustes</button>
+</nav>
+</div>
+</header>
+
+<div class="container">
+
+<div id="dashboard" class="tab-content active">
+  <div id="epocaBanner"></div>
+  <div class="section">
+    <h3 class="section-title">🌡️ Microclima Rooftop</h3>
+    <div class="weather">
+      <div class="weather-item"><div class="weather-val" id="temp">--</div><div class="weather-lbl">Temperatura</div></div>
+      <div class="weather-item"><div class="weather-val" id="humidity">--</div><div class="weather-lbl">Humedad</div></div>
+      <div class="weather-item"><div class="weather-val">1500m</div><div class="weather-lbl">Altitud</div></div>
+      <div class="weather-item"><div class="weather-val">7–8h</div><div class="weather-lbl">Luz directa</div></div>
+    </div>
+  </div>
+  <div class="section">
+    <h3 class="section-title">⚠️ Qué vigilar hoy</h3>
+    <div id="alertsContainer"></div>
+  </div>
+  <div class="section">
+    <h3 class="section-title">💪 Estado de la colección</h3>
+    <div class="trees-grid" id="vigorGrid"></div>
+  </div>
+</div>
+
+<div id="trees" class="tab-content">
+  <div class="section">
+    <div class="flex-between">
+      <h3 class="section-title">🌲 Mis Árboles</h3>
+      <button class="btn btn-primary" onclick="openModal('modalAddTree')">+ Nuevo Árbol</button>
+    </div>
+    <div class="trees-grid" id="treesGrid"></div>
+  </div>
+</div>
+
+<div id="calendario" class="tab-content">
+  <div class="section">
+    <h3 class="section-title">Calendario-brújula</h3>
+    <div id="calendarioContent"></div>
+  </div>
+</div>
+
+<div id="asoleamiento" class="tab-content">
+  <div class="section">
+    <h3 class="section-title">Asoleamiento</h3>
+    <div id="asolContent"></div>
+  </div>
+</div>
+
+<div id="referencias" class="tab-content">
+  <div class="section">
+    <h3 class="section-title">Maestros & referencias</h3>
+    <select class="form-select" id="refFilterTec" onchange="renderReferencias()" style="margin-bottom:.7rem">
+      <option value="">Todas las técnicas</option>
+      <option value="trasplante">Trasplante</option>
+      <option value="poda_raiz">Poda de raíz</option>
+      <option value="pinzado">Pinzado</option>
+      <option value="alambrado">Alambrado</option>
+      <option value="recuperacion">Recuperación</option>
+      <option value="mantenimiento">Mantenimiento</option>
+      <option value="seleccion">Selección</option>
+    </select>
+    <div id="refContent"></div>
+  </div>
+</div>
+
+<div id="guide" class="tab-content">
+  <div class="section">
+    <h3 class="section-title">📖 Guía Estávios (tropicalizada)</h3>
+    <div id="guideContent"></div>
+  </div>
+</div>
+
+<div id="report" class="tab-content">
+  <div class="section">
+    <h3 class="section-title">📊 Reportes</h3>
+    <button class="btn btn-primary btn-block" onclick="generateReport()">📥 Descargar Reporte de Colección</button>
+    <div class="mt-2" id="reportSummary"></div>
+  </div>
+</div>
+
+<div id="settings" class="tab-content">
+  <div class="section">
+    <h3 class="section-title">⚙️ Configuración</h3>
+    <div class="form-group">
+      <label class="form-label">Nombre Colección</label>
+      <input class="form-input" id="setName" value="Colección Paco Arriaza">
+      <label class="form-label mt-1">Ubicación</label>
+      <input class="form-input" id="setLocation" value="Ciudad de Guatemala, rooftop">
+      <label class="form-label mt-1">Temp. promedio época seca (°C)</label>
+      <input class="form-input" type="number" id="setTempDry" value="26">
+      <label class="form-label mt-1">API Key OpenWeather (opcional)</label>
+      <input class="form-input" id="setWeatherKey" placeholder="clima en vivo">
+      <button class="btn btn-primary btn-block mt-1" onclick="saveSettings()">💾 Guardar</button>
+    </div>
+    <div class="mt-2">
+      <label class="form-label">Respaldo de Datos</label>
+      <button class="btn btn-secondary btn-block" onclick="exportData()">📤 Exportar (JSON)</button>
+      <button class="btn btn-secondary btn-block mt-1" onclick="importData()">📥 Importar (JSON)</button>
+      <button class="btn btn-secondary btn-block mt-1" style="background:#fee;color:var(--danger);border-color:var(--danger)" onclick="clearAllData()">🗑️ Limpiar Todo</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div id="modalAddTree" class="modal">
+<div class="modal-content">
+<div class="modal-header"><h2 class="modal-title">Nuevo Árbol</h2><button class="close-modal" onclick="closeModal('modalAddTree')">×</button></div>
+<form onsubmit="addTree(event)">
+<div class="form-group"><label class="form-label">Especie del catálogo (opcional)</label><select class="form-select" id="tSpeciesPick" onchange="onSpeciesPick()"><option value="">— elegir del catálogo o llenar manual —</option></select></div>
+<div class="form-group"><label class="form-label">Número</label><input class="form-input" type="number" id="tNum" required></div>
+<div class="form-group"><label class="form-label">Nombre</label><input class="form-input" id="tName" placeholder="Pino Negro Japonés" required></div>
+<div class="form-group"><label class="form-label">Especie</label><input class="form-input" id="tSpecies" placeholder="Pinus thunbergii" required></div>
+<div class="form-group"><label class="form-label">¿Es conífera?</label><select class="form-select" id="tConifer"><option value="si">Sí (pino, junípero, ciprés...)</option><option value="no">No (caduca, tropical, hoja ancha)</option></select></div>
+<div class="form-group"><label class="form-label">Estilo</label><select class="form-select" id="tStyle"><option>Informal erecto (Moyogi)</option><option>Cascada (Kengai)</option><option>Semi-cascada</option><option>Literati (Bunjin)</option><option>Formal erecto (Chokkan)</option><option>Inclinado (Shakan)</option><option>Escoba (Hokidachi)</option></select></div>
+<div class="form-group"><label class="form-label">Tier</label><select class="form-select" id="tTier"><option value="tesoro">🏆 TESORO (conservación)</option><option value="core">⭐ CORE (juníperos/maestría)</option><option value="desarrollo">📈 DESARROLLO (aceres/tropicales)</option></select></div>
+<div class="form-group"><label class="form-label">Notas protocolo</label><textarea class="form-textarea" id="tProtocol" placeholder="Riego, particularidades..."></textarea></div>
+<button type="submit" class="btn btn-primary btn-block">✅ Crear</button>
+</form>
+</div>
+</div>
+
+<div id="modalTreeDetail" class="modal">
+<div class="modal-content">
+<div class="modal-header"><h2 class="modal-title" id="detailTitle">Árbol</h2><button class="close-modal" onclick="closeModal('modalTreeDetail')">×</button></div>
+<div id="treeDetailContent"></div>
+</div>
+</div>
+
+<div id="modalCalList" class="modal">
+<div class="modal-content">
+<div class="modal-header"><h2 class="modal-title" id="calListTitle">Ventana de la época</h2><button class="close-modal" onclick="closeModal('modalCalList')">×</button></div>
+<div id="calListContent"></div>
+</div>
+</div>
+
+<div id="modalAddRef" class="modal">
+<div class="modal-content">
+<div class="modal-header"><h2 class="modal-title">Añadir referencia</h2><button class="close-modal" onclick="closeModal('modalAddRef')">×</button></div>
+<form onsubmit="addReference(event)">
+<div class="form-group"><label class="form-label">Maestro / fuente</label><input class="form-input" id="rMaestro" placeholder="Bonsai DomArs, Estávios..." required></div>
+<div class="form-group"><label class="form-label">Atribución</label><input class="form-input" id="rAtribucion" placeholder="Bonsai DomArs, video X"></div>
+<div class="form-group"><label class="form-label">Tipo de fuente</label><select class="form-select" id="rFuenteTipo"><option value="video">Video</option><option value="manual">Manual</option><option value="post">Post</option><option value="web">Web</option><option value="conversacion_wa">WhatsApp</option><option value="nota">Nota propia</option></select></div>
+<div class="form-group"><label class="form-label">Enlace (opcional)</label><input class="form-input" id="rUrl" placeholder="https://..."></div>
+<div class="form-group"><label class="form-label">Naturaleza</label><select class="form-select" id="rTipo"><option value="tecnica">Técnica</option><option value="definicion">Definición</option><option value="protocolo">Protocolo</option><option value="especie">Especie</option></select></div>
+<div class="form-group"><label class="form-label">Técnica(s) — separadas por coma</label><input class="form-input" id="rTecnica" placeholder="pinzado, alambrado"></div>
+<div class="form-group"><label class="form-label">Especie(s)/tipo — coma</label><input class="form-input" id="rEspecie" placeholder="conifera, ficus"></div>
+<div class="form-group"><label class="form-label">Época</label><select class="form-select" id="rEpoca"><option value="">—</option><option value="seco">Seco</option><option value="transicion">Transición</option><option value="lluvia">Lluvia</option></select></div>
+<div class="form-group"><label class="form-label">Nota (en tus palabras)</label><textarea class="form-textarea" id="rNota" required></textarea></div>
+<div class="form-group"><label class="form-label" style="text-transform:none;letter-spacing:0"><input type="checkbox" id="rPendiente"> Pendiente de validar con maestro</label></div>
+<button type="submit" class="btn btn-primary btn-block">Guardar referencia</button>
+</form>
+</div>
+</div>
+
+<div id="modalObs" class="modal">
+<div class="modal-content">
+<div class="modal-header"><h2 class="modal-title" id="obsTitle">🔍 Observar árbol</h2><button class="close-modal" onclick="closeModal('modalObs')">×</button></div>
+<div id="obsContent"></div>
+</div>
+</div>
+
+<div id="modalAddPhoto" class="modal">
+<div class="modal-content">
+<div class="modal-header"><h2 class="modal-title">Agregar Foto</h2><button class="close-modal" onclick="closeModal('modalAddPhoto')">×</button></div>
+<form onsubmit="addPhoto(event)">
+<div class="form-group"><label class="form-label">Tipo</label><select class="form-select" id="pType"><option>Frontal canónico</option><option>Lateral 45°</option><option>Base/Raíces (nebari)</option><option>Detalle rama</option></select></div>
+<div class="form-group"><label class="form-label">Foto</label><input class="form-input" type="file" id="pFile" accept="image/*" required></div>
+<div class="form-group"><label class="form-label">Notas</label><textarea class="form-textarea" id="pNotes"></textarea></div>
+<button type="submit" class="btn btn-primary btn-block">📸 Guardar</button>
+</form>
+</div>
+</div>
+
+<div id="modalAddLog" class="modal">
+<div class="modal-content">
+<div class="modal-header"><h2 class="modal-title">Log de Trabajo</h2><button class="close-modal" onclick="closeModal('modalAddLog')">×</button></div>
+<form onsubmit="addLog(event)">
+<div class="form-group"><label class="form-label">Tipo</label><select class="form-select" id="wType"><option>Pinzado</option><option>Alambrado</option><option>Poda rama</option><option>Poda raíces / trasplante</option><option>Fertilización</option><option>Giro (sol parejo)</option><option>Otro</option></select></div>
+<div class="form-group"><label class="form-label">Fecha</label><input class="form-input" type="date" id="wDate" required></div>
+<div class="form-group"><label class="form-label">Descripción</label><textarea class="form-textarea" id="wDesc"></textarea></div>
+<div class="form-group"><p class="text-sm text-muted">La recuperación NO se mide en días fijos. La app te recordará observar la lignificación de brotes nuevos como señal real de recuperación (Estávios).</p></div>
+<button type="submit" class="btn btn-primary btn-block">📋 Guardar</button>
+</form>
+</div>
+</div>
+
+<script>
+const APP={trees:[],currentTreeId:null,obsState:{},settings:{name:'Colección Paco Arriaza',location:'Ciudad de Guatemala, rooftop',tempDry:26,weatherKey:''}};
+
+/* ===== v1.3 CP2: catálogo de especies tropicalizado (Estávios + GT) ===== */
+const SPECIES=[
+ {id:"ficus",nombre:"Ficus",cientifico:"Ficus benjamina/retusa",tipo:"tropical",conifer:"no",luz:"parcial",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"buganvilia",nombre:"Buganvilia",cientifico:"Bougainvillea",tipo:"tropical",conifer:"no",luz:"pleno",epoca_pico:"seco",riego:"bajo",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"serissa",nombre:"Serissa",cientifico:"Serissa foetida",tipo:"tropical",conifer:"no",luz:"parcial",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"sageretia",nombre:"Sageretia",cientifico:"Sageretia theezans",tipo:"tropical",conifer:"no",luz:"parcial",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"ligustrum",nombre:"Ligustrum",cientifico:"Ligustrum sp.",tipo:"tropical",conifer:"no",luz:"parcial",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"olivo",nombre:"Olivo",cientifico:"Olea europaea",tipo:"perenne",conifer:"no",luz:"pleno",epoca_pico:"seco",riego:"bajo",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"buxus",nombre:"Buxus/Boj",cientifico:"Buxus sp.",tipo:"perenne",conifer:"no",luz:"parcial",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"jazmin",nombre:"Jazmín",cientifico:"Jasminum sp.",tipo:"tropical",conifer:"no",luz:"parcial",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"guayacan",nombre:"Guayacán",cientifico:"Guaiacum sp.",tipo:"tropical",conifer:"no",luz:"pleno",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"ebano",nombre:"Ébano/Guamúchil",cientifico:"Pithecellobium dulce",tipo:"tropical",conifer:"no",luz:"pleno",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"junipero_shimpaku",nombre:"Junípero Shimpaku",cientifico:"Juniperus chinensis",tipo:"conifera",conifer:"si",luz:"pleno",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"junipero_procumbens",nombre:"Junípero Procumbens",cientifico:"Juniperus procumbens",tipo:"conifera",conifer:"si",luz:"pleno",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"hinoki",nombre:"Hinoki",cientifico:"Chamaecyparis obtusa",tipo:"conifera",conifer:"si",luz:"parcial",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"cryptomeria",nombre:"Cryptomeria (Sugi)",cientifico:"Cryptomeria japonica",tipo:"conifera",conifer:"si",luz:"parcial",epoca_pico:"lluvia",riego:"alto",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"cipres",nombre:"Ciprés",cientifico:"Cupressus lusitanica",tipo:"conifera",conifer:"si",luz:"pleno",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"taxodium",nombre:"Taxodium (Sabino)",cientifico:"Taxodium mucronatum",tipo:"conifera",conifer:"si",luz:"pleno",epoca_pico:"lluvia",riego:"alto",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"pino_thunbergii",nombre:"Pino Negro Japonés",cientifico:"Pinus thunbergii",tipo:"conifera",conifer:"si",luz:"pleno",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"con_cuidado",micorrizas:true,validar:false},
+ {id:"pino_tropical",nombre:"Pino nacional/caribe",cientifico:"Pinus oocarpa/maximinoi",tipo:"conifera",conifer:"si",luz:"pleno",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"con_cuidado",micorrizas:true,validar:true},
+ {id:"pino_densiflora",nombre:"Pino Rojo Japonés",cientifico:"Pinus densiflora",tipo:"conifera",conifer:"si",luz:"pleno",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"con_cuidado",micorrizas:true,validar:false},
+ {id:"liquidambar",nombre:"Liquidámbar",cientifico:"Liquidambar styraciflua",tipo:"caduca",conifer:"no",luz:"parcial",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"arce_tridente",nombre:"Arce Tridente",cientifico:"Acer buergerianum",tipo:"caduca",conifer:"no",luz:"parcial",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"con_cuidado",micorrizas:false,validar:false},
+ {id:"arce_palmatum",nombre:"Arce Palmatum",cientifico:"Acer palmatum",tipo:"caduca",conifer:"no",luz:"sombra",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"validar",micorrizas:false,validar:true},
+ {id:"wisteria",nombre:"Wisteria",cientifico:"Wisteria sp.",tipo:"caduca",conifer:"no",luz:"pleno",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"validar",micorrizas:false,validar:true},
+ {id:"azalea",nombre:"Azalea",cientifico:"Rhododendron sp.",tipo:"perenne",conifer:"no",luz:"sombra",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"validar",micorrizas:false,validar:true},
+ {id:"piracanta",nombre:"Piracanta",cientifico:"Pyracantha sp.",tipo:"perenne",conifer:"no",luz:"pleno",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"prospera",micorrizas:false,validar:false},
+ {id:"olmo",nombre:"Olmo",cientifico:"Ulmus/Zelkova",tipo:"caduca",conifer:"no",luz:"parcial",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"con_cuidado",micorrizas:false,validar:false},
+ {id:"cotoneaster",nombre:"Cotoneaster",cientifico:"Cotoneaster sp.",tipo:"perenne",conifer:"no",luz:"parcial",epoca_pico:"lluvia",riego:"medio",aclimatacion_gt:"con_cuidado",micorrizas:false,validar:false}
+];
+function findSpecies(t){
+  if(!t)return null;
+  if(t.speciesId){const s=SPECIES.find(x=>x.id===t.speciesId);if(s)return s;}
+  const q=(t.species||'').toLowerCase().trim();
+  if(q){const s=SPECIES.find(x=>{const c=x.cientifico.toLowerCase();return c.includes(q)||q.includes(c.split('/')[0].trim())||x.nombre.toLowerCase()===q;});if(s)return s;}
+  return null;
+}
+function deriveMeta(t){
+  const s=findSpecies(t);
+  if(s)return {tipo:s.tipo,luz:s.luz,epoca_pico:s.epoca_pico,micorrizas:s.micorrizas,aclimatacion:s.aclimatacion_gt,validar:s.validar,nombre:s.nombre,esDefault:false};
+  return {tipo:(t.conifer==='si'?'conifera':'tropical'),luz:'parcial',epoca_pico:'lluvia',micorrizas:(t.conifer==='si'),aclimatacion:'',validar:false,nombre:null,esDefault:true};
+}
+function luzLabel(l){return l==='pleno'?'Sol pleno':l==='parcial'?'Sol parcial':l==='sombra'?'Sombra/proteger':'—';}
+function tipoLabel(tp){return tp==='conifera'?'Conífera':tp==='caduca'?'Caduca':tp==='tropical'?'Tropical':tp==='perenne'?'Perenne':'—';}
+function fichaMeta(t){
+  const m=deriveMeta(t);
+  const tp=t.tipo||m.tipo, lz=t.luz||m.luz;
+  let chips=`<span class="chip">${tipoLabel(tp)}</span><span class="chip">Luz: ${luzLabel(lz)}</span><span class="chip">Pico: ${m.epoca_pico||'—'}</span>`;
+  let notes='';
+  if(m.aclimatacion==='validar'||m.validar)notes+='<div class="pending-flag">⚠ Aclimatación a validar con maestro (1500m tropical).</div>';
+  else if(m.aclimatacion==='con_cuidado')notes+='<div class="text-sm text-muted mt-1">Aclimatación: con cuidado a 1500m.</div>';
+  if(t.conifer==='si'&&m.micorrizas)notes+='<div class="text-sm text-muted mt-1">Conífera: al trasplantar conserva ≥50% de raíces (micorrizas).</div>';
+  if(m.esDefault)notes+='<div class="text-sm text-muted mt-1">Especie fuera del catálogo — metadatos por defecto.</div>';
+  return `<div class="chips">${chips}</div>${notes}`;
+}
+function populateSpeciesPicker(){
+  const sel=document.getElementById('tSpeciesPick'); if(!sel)return;
+  const groups=[['conifera','Coníferas'],['tropical','Tropicales/perennes'],['perenne','Perennes'],['caduca','Caducas']];
+  let html='<option value="">— elegir del catálogo o llenar manual —</option>';
+  groups.forEach(([g,lbl])=>{
+    const items=SPECIES.filter(x=>x.tipo===g);
+    if(!items.length)return;
+    html+=`<optgroup label="${lbl}">`+items.map(x=>`<option value="${x.id}">${x.nombre}${x.validar?' (validar)':''}</option>`).join('')+'</optgroup>';
+  });
+  sel.innerHTML=html;
+}
+function onSpeciesPick(){
+  const id=val('tSpeciesPick'); if(!id)return;
+  const s=SPECIES.find(x=>x.id===id); if(!s)return;
+  setVal('tName',s.nombre); setVal('tSpecies',s.cientifico);
+  const cf=document.getElementById('tConifer'); if(cf)cf.value=(s.conifer==='si'?'si':'no');
+}
+
+/* ===== v1.3 CP3: calendario-brújula (orienta; el motor autoriza) ===== */
+const CALENDARIO=[
+ {epoca:"transicion",categoria:"conifera",ventana:"Trasplante + poda de raíz",intensidad:"principal",senal_a_vigilar:"Yemas hinchando, raíces al borde"},
+ {epoca:"lluvia",categoria:"conifera",ventana:"Pinzado / manejo de brotes",intensidad:"principal",senal_a_vigilar:"Brotes extendiéndose, lignificación"},
+ {epoca:"lluvia",categoria:"conifera",ventana:"Trasplante agresivo",intensidad:"evitar",senal_a_vigilar:"Follaje pleno"},
+ {epoca:"seco",categoria:"conifera",ventana:"Alambrado / estructura, limpieza",intensidad:"secundaria",senal_a_vigilar:"Savia baja; araña roja"},
+ {epoca:"seco",categoria:"conifera",ventana:"Trasplante / poda fuerte de raíz",intensidad:"evitar",senal_a_vigilar:"Esperar transición"},
+ {epoca:"transicion",categoria:"tropical",ventana:"Trasplante",intensidad:"principal",senal_a_vigilar:"Brotación nueva"},
+ {epoca:"lluvia",categoria:"tropical",ventana:"Pinzado + desarrollo + fertilización",intensidad:"principal",senal_a_vigilar:"Brotes que se extienden y endurecen"},
+ {epoca:"seco",categoria:"tropical",ventana:"Mantenimiento (buganvilia: estrés seco = flor)",intensidad:"secundaria",senal_a_vigilar:"Humedad; floración"},
+ {epoca:"seco",categoria:"tropical",ventana:"Trabajo estructural fuerte",intensidad:"evitar",senal_a_vigilar:"Crecimiento lento"},
+ {epoca:"seco",categoria:"caduca",ventana:"Poda estructural + alambrado SIN HOJA",intensidad:"principal",senal_a_vigilar:"Caída de hoja, estructura visible"},
+ {epoca:"transicion",categoria:"caduca",ventana:"Trasplante antes de brotar",intensidad:"principal",senal_a_vigilar:"Yemas hinchando antes de abrir"},
+ {epoca:"lluvia",categoria:"caduca",ventana:"Pinzado tras 2º par de foliolos",intensidad:"secundaria",senal_a_vigilar:"Lignificación entre podas"},
+ {epoca:"lluvia",categoria:"caduca",ventana:"Trasplante",intensidad:"evitar",senal_a_vigilar:"Follaje pleno"}
+];
+function calCategoria(t){const tp=t.tipo||deriveMeta(t).tipo;return tp==='conifera'?'conifera':tp==='caduca'?'caduca':'tropical';}
+function calLabel(c){return c==='conifera'?'Coníferas':c==='caduca'?'Caducas':'Tropicales / perennes';}
+function renderCalendario(){
+  const ep=getEpoca().tipo;
+  const epLbl={seco:'Época seca',transicion:'Transición',lluvia:'Época lluviosa'}[ep]||ep;
+  const seg=['seco','transicion','lluvia'].map(x=>`<span class="cal-seg ${x===ep?'on':''}">${x==='seco'?'Seco':x==='transicion'?'Transición':'Lluvia'}</span>`).join('<span class="cal-arrow">›</span>');
+  let html=`<div class="cal-timeline">${seg}</div><p class="text-sm text-muted mt-1">Estás en <b>${epLbl}</b>. El calendario ubica las ventanas; al tocar, te lleva a observar — el árbol decide.</p>`;
+  ['conifera','tropical','caduca'].forEach(cat=>{
+    const rows=CALENDARIO.filter(c=>c.epoca===ep&&c.categoria===cat);
+    if(!rows.length)return;
+    const n=APP.trees.filter(t=>calCategoria(t)===cat).length;
+    html+=`<div class="cal-cat"><div class="cal-cat-h"><span class="cal-cat-name">${calLabel(cat)}</span><span class="eyebrow">${n} árbol${n===1?'':'es'}</span></div>`;
+    rows.forEach(r=>{
+      const cls=r.intensidad;
+      const badge=cls==='principal'?'Gran ventana':cls==='secundaria'?'Ventana menor':'Evitar ahora';
+      const act=(cls!=='evitar')?`<button class="btn btn-ghost btn-sm2" onclick="openCalWindow('${cat}','${r.ventana.replace(/'/g,'’')}')">Ver mis ${calLabel(cat).toLowerCase()}</button>`:'';
+      html+=`<div class="cal-win ${cls}"><div class="cal-win-top"><span class="cal-badge ${cls}">${badge}</span><span class="cal-win-name">${r.ventana}</span></div><div class="cal-win-sig text-sm text-muted">Vigilar: ${r.senal_a_vigilar}</div>${act}</div>`;
+    });
+    html+='</div>';
+  });
+  const ce=document.getElementById('calendarioContent'); if(ce)ce.innerHTML=html;
+}
+function openCalWindow(cat,ventana){
+  const trees=APP.trees.filter(t=>calCategoria(t)===cat);
+  let html=`<p class="text-sm text-muted">Ventana esperada: <b>${ventana}</b>. Toca un árbol para observarlo — el motor decide si hay ventana real.</p>`;
+  if(!trees.length){html+='<p class="text-muted mt-1">No tienes árboles de esta categoría.</p>';}
+  else{
+    html+='<div class="cal-list">'+trees.map(t=>{
+      const st=stateOf(t);const cover=coverPhoto(t);
+      const thumb=cover?`<img class="cal-thumb" src="${cover}" alt="">`:`<span class="cal-thumb cal-thumb-x">#${t.num}</span>`;
+      return `<div class="cal-row" tabindex="0" role="button" onclick="calObserve(${t.id})" onkeydown="if(event.key==='Enter'){calObserve(${t.id});}">${thumb}<div class="cal-row-b"><div class="cal-row-n">#${t.num} ${t.name}</div><div class="state-line" style="--st:${st.color}"><span class="state-rule"></span><span class="state-text">${st.label}</span></div></div></div>`;
+    }).join('')+'</div>';
+  }
+  document.getElementById('calListContent').innerHTML=html;
+  openModal('modalCalList');
+}
+function calObserve(id){closeModal('modalCalList');openObs(id);}
+
+/* ===== v1.3 CP4: asoleamiento (reloj SOLAR, no de lluvia) ===== */
+const BALCONES=[
+ {id:"se",nombre:"Balcón SE (mañana)",azimut:135,calidad:"sol de mañana, sombra de tarde",exposicion:{sol_norte:"05:45-11:20",cenital:"05:50-12:00",sol_sur_bajo:"06:30-14:30",transicion_sol:"06:15-13:05"}},
+ {id:"nw",nombre:"Balcón NW (tarde)",azimut:315,calidad:"sol de tarde (el más duro)",exposicion:{sol_norte:"11:25-18:25",cenital:"12:05-18:10",sol_sur_bajo:"14:35-17:30",transicion_sol:"13:10-18:05"}},
+ {id:"sw",nombre:"Balcón SW",azimut:225,calidad:"variable según estación",exposicion:{sol_norte:"12:45-18:25",cenital:"12:00-18:10",sol_sur_bajo:"09:30-17:30",transicion_sol:"11:15-18:05"}}
+];
+function currentSolarRegime(){
+  const m=new Date().getMonth();
+  return ['sol_sur_bajo','sol_sur_bajo','transicion_sol','cenital','sol_norte','sol_norte','sol_norte','cenital','transicion_sol','transicion_sol','sol_sur_bajo','sol_sur_bajo'][m];
+}
+function balconHoras(b,reg){
+  const w=b.exposicion[reg]; if(!w)return 0;
+  const parts=w.split('-'); if(parts.length<2)return 0;
+  const toMin=t=>{const a=t.split(':');return (+a[0])*60+(+a[1]);};
+  return Math.max(0,(toMin(parts[1])-toMin(parts[0]))/60);
+}
+function suggestBalcon(luz,reg){
+  if(luz==='pleno'){
+    const r=BALCONES.map(b=>({b,h:balconHoras(b,reg)})).sort((x,y)=>y.h-x.h);
+    return {bal:r[0].b, why:'más horas de sol'};
+  }
+  const se=BALCONES.find(b=>b.id==='se');
+  if(luz==='sombra')return {bal:se, why:'sol de mañana (más suave); fondo del balcón como refugio'};
+  return {bal:se, why:'sol de mañana, sombra de tarde'};
+}
+function setBalcon(id,v){const t=getTree(id); if(t){t.balcon=v||null; saveToStorage();}}
+function renderAsol(){
+  const reg=currentSolarRegime();
+  const regLbl={sol_norte:'Sol al norte (verano)',cenital:'Cenital (sol vertical)',sol_sur_bajo:'Sol bajo al sur (invierno)',transicion_sol:'Transición solar (equinoccio)'}[reg];
+  const order=['sol_sur_bajo','transicion_sol','cenital','sol_norte'];
+  const segLbl={sol_sur_bajo:'Sur bajo',transicion_sol:'Equinoccio',cenital:'Cenital',sol_norte:'Norte'};
+  let html='<div class="cal-timeline">'+order.map(x=>`<span class="cal-seg ${x===reg?'on':''}">${segLbl[x]}</span>`).join('<span class="cal-arrow">·</span>')+'</div>';
+  html+=`<p class="text-sm text-muted mt-1">Régimen solar: <b>${regLbl}</b>. Este reloj es <b>solar</b>, no de lluvia. Ningún vecino te tapa: estas son tus horas de sol en el barandal.</p>`;
+  html+='<div class="asol-balcones">'+BALCONES.map(b=>{
+    const w=b.exposicion[reg]||'—'; const h=balconHoras(b,reg).toFixed(1);
+    return `<div class="asol-bal"><div class="asol-bal-n">${b.nombre}</div><div class="eyebrow">${b.azimut}° · ${b.calidad}</div><div class="asol-bal-w">${w} <span class="text-muted">(${h} h)</span></div></div>`;
+  }).join('')+'</div>';
+  html+='<h4 class="asol-h">Ubicación sugerida</h4>';
+  html+='<div class="cal-list">'+APP.trees.map(t=>{
+    const m=deriveMeta(t); const luz=t.luz||m.luz;
+    const sug=suggestBalcon(luz,reg); const bal=sug.bal;
+    const cur=t.balcon?BALCONES.find(b=>b.id===t.balcon):null;
+    const mism=cur&&cur.id!==bal.id;
+    const cover=coverPhoto(t);
+    const thumb=cover?`<img class="cal-thumb" src="${cover}" alt="">`:`<span class="cal-thumb cal-thumb-x">#${t.num}</span>`;
+    let line=`Luz: ${luzLabel(luz)} → <b>${bal.nombre}</b> <span class="text-muted">(${sug.why})</span>`;
+    if(mism)line+=`<div class="pending-flag">Está en ${cur.nombre} → mover a ${bal.nombre}</div>`;
+    if(luz==='sombra'&&balconHoras(bal,reg)>5)line+='<div class="text-sm text-muted mt-1">Mucho sol para especie de sombra → fondo del balcón o malla 30%.</div>';
+    return `<div class="cal-row" style="cursor:default">${thumb}<div class="cal-row-b"><div class="cal-row-n">#${t.num} ${t.name}</div><div class="text-sm">${line}</div></div></div>`;
+  }).join('')+'</div>';
+  html+='<p class="text-sm text-muted mt-2">Barandal = máximo sol · fondo = sombra (sobre todo cerca del cenit). Al cambiar de régimen solar, revisá ubicaciones.</p>';
+  const e=document.getElementById('asolContent'); if(e)e.innerHTML=html;
+}
+
+/* ===== v1.4: capa Referencias / Maestros GT (enlace + atribución + nota propia) ===== */
+const REFERENCIAS_SEED=[
+ {id:"ref_estavios_lignif",maestro:"Estávios",fuente_tipo:"manual",fuente_url:"",tipo:"definicion",etiquetas:{tecnica:["recuperacion","pinzado"],especie:[],epoca:[]},nota:"La recuperación no se mide en días: se confirma cuando los brotes nuevos se endurecen (lignifican).",atribucion:"Estávios M2",pendiente_validar:false},
+ {id:"ref_estavios_micorrizas",maestro:"Estávios",fuente_tipo:"manual",fuente_url:"",tipo:"protocolo",etiquetas:{tecnica:["trasplante","poda_raiz"],especie:["conifera"],epoca:["transicion"]},nota:"Al trasplantar pinos, conserva al menos el 50% de la masa de raíces para proteger las micorrizas.",atribucion:"Estávios M2",pendiente_validar:false},
+ {id:"ref_estavios_podaraiz",maestro:"Estávios",fuente_tipo:"manual",fuente_url:"",tipo:"protocolo",etiquetas:{tecnica:["poda_raiz","trasplante"],especie:[],epoca:["transicion"]},nota:"Poda de raíz: no más del 30% en mantenimiento; 1/3 a 2/3 en renovación, según especie y contexto.",atribucion:"Estávios",pendiente_validar:true},
+ {id:"ref_estavios_alambre",maestro:"Estávios",fuente_tipo:"manual",fuente_url:"",tipo:"tecnica",etiquetas:{tecnica:["alambrado"],especie:[],epoca:[]},nota:"Alambre cercano a 1/3 del grosor de la rama, ángulo 45 grados; retíralo antes de que marque la corteza.",atribucion:"Estávios M2",pendiente_validar:false},
+ {id:"ref_estavios_caduca",maestro:"Estávios",fuente_tipo:"manual",fuente_url:"",tipo:"tecnica",etiquetas:{tecnica:["poda","pinzado"],especie:["caduca"],epoca:["lluvia"]},nota:"Caducas: poda tras el segundo par de foliolos y pinza desde la primera yema para densificar sin alargamientos.",atribucion:"Estávios M2",pendiente_validar:false},
+ {id:"ref_estavios_seleccion",maestro:"Estávios",fuente_tipo:"manual",fuente_url:"",tipo:"definicion",etiquetas:{tecnica:["seleccion"],especie:[],epoca:[]},nota:"Material apto: hojas pequeñas, tronco leñoso de 2cm o más, raíces sanas, estilo definido. Si no, engrosar un año en colador con akadama.",atribucion:"Estávios M1",pendiente_validar:false},
+ {id:"ref_estavios_giro",maestro:"Estávios",fuente_tipo:"manual",fuente_url:"",tipo:"tecnica",etiquetas:{tecnica:["mantenimiento"],especie:[],epoca:[]},nota:"Gira cada árbol cada semana para sol parejo por todos los lados y buena ramificación.",atribucion:"Estávios M2",pendiente_validar:false},
+ {id:"ref_casa_cuidados",maestro:"La Casa del Bonsái",fuente_tipo:"web",fuente_url:"https://bonsaiguatemala.com",tipo:"protocolo",etiquetas:{tecnica:["mantenimiento"],especie:["conifera"],epoca:[]},nota:"Guías abiertas de cuidado (shimpaku, hinoki) y fundamentos de biología del árbol.",atribucion:"La Casa del Bonsái (Pedro de León)",pendiente_validar:false},
+ {id:"ref_domars",maestro:"Bonsai DomArs",fuente_tipo:"video",fuente_url:"https://youtube.com/@bonsaidomars3278",tipo:"tecnica",etiquetas:{tecnica:[],especie:[],epoca:[]},nota:"Técnica práctica de aficionado guatemalteco (Jacaltenango). Curar videos por tema.",atribucion:"Bonsai DomArs (Ottoniel Domingo)",pendiente_validar:false}
+];
+function seedReferencias(){
+  if(!Array.isArray(APP.referencias))APP.referencias=[];
+  if(APP.referencias.length===0)APP.referencias=REFERENCIAS_SEED.map(r=>JSON.parse(JSON.stringify(r)));
+}
+function splitTags(x){return (x||'').split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);}
+function refTags(r){const e=r.etiquetas||{};return [].concat(e.tecnica||[],e.especie||[],e.epoca||[]);}
+function refCard(r){
+  const tags=refTags(r).slice(0,6).map(x=>`<span class="chip">${x}</span>`).join('');
+  const pend=r.pendiente_validar?'<span class="chip" style="background:var(--akadama);color:var(--volcanico)">validar</span>':'';
+  const link=r.fuente_url?`<a class="ref-link" href="${r.fuente_url}" target="_blank" rel="noopener">Ver fuente ›</a>`:'';
+  return `<div class="ref-card"><div class="ref-attr eyebrow">${r.atribucion||r.maestro||''}</div><div class="ref-nota">${r.nota||''}</div><div class="chips">${tags}${pend}</div>${link}</div>`;
+}
+function refMini(r){
+  const link=r.fuente_url?` <a class="ref-link" href="${r.fuente_url}" target="_blank" rel="noopener">›</a>`:'';
+  return `<div class="ref-mini"><span class="eyebrow">${r.atribucion||r.maestro||''}</span> · ${r.nota||''}${link}</div>`;
+}
+function renderReferencias(){
+  const cont=document.getElementById('refContent'); if(!cont)return;
+  const fsel=document.getElementById('refFilterTec'); const ft=fsel?fsel.value:'';
+  let list=(APP.referencias||[]);
+  if(ft)list=list.filter(r=>refTags(r).includes(ft));
+  let html=`<div class="flex-between"><span class="eyebrow">${list.length} referencia${list.length===1?'':'s'}</span><button class="btn btn-ghost btn-sm2" onclick="openModal('modalAddRef')">+ Añadir</button></div>`;
+  html+='<div class="ref-list mt-1">'+(list.length?list.map(refCard).join(''):'<p class="text-muted text-sm">Sin referencias. Añade lecciones de tus maestros.</p>')+'</div>';
+  cont.innerHTML=html;
+}
+function addReference(e){
+  e.preventDefault();
+  const r={id:'ref_'+Date.now(),maestro:val('rMaestro'),fuente_tipo:val('rFuenteTipo'),fuente_url:val('rUrl'),tipo:val('rTipo'),
+    etiquetas:{tecnica:splitTags(val('rTecnica')),especie:splitTags(val('rEspecie')),epoca:[val('rEpoca')].filter(Boolean)},
+    nota:val('rNota'),atribucion:val('rAtribucion')||val('rMaestro'),pendiente_validar:document.getElementById('rPendiente').checked};
+  if(!Array.isArray(APP.referencias))APP.referencias=[];
+  APP.referencias.unshift(r); saveToStorage(); renderReferencias();
+  closeModal('modalAddRef'); document.querySelector('#modalAddRef form').reset();
+}
+function treeRefs(t){
+  const m=deriveMeta(t); const tipo=t.tipo||m.tipo; const sp=findSpecies(t); const spid=sp?sp.id:null;
+  const list=(APP.referencias||[]).filter(r=>{
+    const esp=(r.etiquetas&&r.etiquetas.especie)||[];
+    return esp.length===0 || esp.includes(tipo) || (spid&&esp.includes(spid));
+  }).slice(0,5);
+  if(!list.length)return '<p class="text-sm text-muted mt-1">Sin referencias para esta especie. Añádelas en Maestros.</p>';
+  return '<div class="ref-mini-list mt-1">'+list.map(refMini).join('')+'</div>';
+}
+
+
+
+
+
+/* === v1.2: reporter de errores en pantalla (de-enmascara "Script error." cuando el origen no es opaco) === */
+function showFatal(msg){
+  let b=document.getElementById('__miraiErr');
+  if(!b){b=document.createElement('pre');b.id='__miraiErr';
+    b.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:99999;margin:0;padding:10px;background:#7f1d1d;color:#fff;font:12px/1.45 monospace;white-space:pre-wrap;max-height:42vh;overflow:auto';
+    b.onclick=function(){b.remove();};
+    (document.body||document.documentElement).appendChild(b);}
+  b.textContent='🛑 '+msg+'\n\n(toca para cerrar)';
+}
+window.addEventListener('error',function(e){showFatal((e.error&&e.error.stack)?e.error.stack:(e.message||'error desconocido'));});
+window.addEventListener('unhandledrejection',function(e){var r=e.reason;showFatal('Promesa rechazada: '+((r&&r.stack)?r.stack:r));});
+
+/* === v1.2: normaliza un árbol para que SIEMPRE tenga los campos que la UI asume === */
+function normalizeTree(t){
+  if(!t||typeof t!=='object')return null;
+  t.photos=Array.isArray(t.photos)?t.photos:[];
+  t.logs=Array.isArray(t.logs)?t.logs:[];
+  if(typeof t.vigor!=='number'||isNaN(t.vigor))t.vigor=3;
+  if(!t.tier)t.tier='desarrollo';
+  if(!t.conifer)t.conifer='no';
+  if(t.num==null)t.num='?';
+  if(!t.name)t.name='(sin nombre)';
+  if(!t.species)t.species='—';
+  if(!t.style)t.style='—';
+  if(t.lastObs===undefined)t.lastObs=null;
+  const _m=deriveMeta(t);
+  if(!t.tipo)t.tipo=_m.tipo;
+  if(!t.luz)t.luz=_m.luz;
+  return t;
+}
+
+function init(){
+  loadFromStorage();
+  if(APP.trees.length===0)loadSampleData();
+  renderEpoca();updateWeather();updateAlerts();renderVigorGrid();populateSpeciesPicker();seedReferencias();
+  setInterval(updateWeather,600000);
+}
+
+function getEpoca(){
+  const m=new Date().getMonth();
+  if(m===3||m===4)return{tipo:'transicion',nombre:'Transición seca→lluvia',icon:'🌤️',msg:'Despertar fuerte. Mejor ventana natural para trasplante SI el árbol da señales (raíces al borde).'};
+  if(m>=4&&m<=9)return{tipo:'lluvia',nombre:'Época lluviosa',icon:'🌧️',msg:'Vigila drenaje y pudrición de raíz. Crecimiento activo → observa brotes y su lignificación.'};
+  return{tipo:'seco',nombre:'Época seca',icon:'☀️',msg:'El riego es el riesgo principal. Revisa humedad de tus pinos tesoro a diario.'};
+}
+function renderEpoca(){
+  const e=getEpoca();
+  const cls=e.tipo==='lluvia'?'epoca-lluvia':'epoca-seco';
+  document.getElementById('epocaBanner').innerHTML=`<div class="epoca-banner ${cls}"><div class="epoca-icon">${e.icon}</div><div class="epoca-text"><strong>${e.nombre} — Guatemala</strong><span>${e.msg}</span></div></div>`;
+}
+
+async function updateWeather(){
+  try{
+    if(APP.settings.weatherKey){
+      const r=await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=14.6349&lon=-90.5069&units=metric&appid=${APP.settings.weatherKey}`);
+      const d=await r.json();
+      if(d&&d.main){document.getElementById('temp').textContent=Math.round(d.main.temp)+'°C';document.getElementById('humidity').textContent=d.main.humidity+'%';}
+    }else{
+      const h=new Date().getHours();const e=getEpoca();
+      const base=e.tipo==='seco'?APP.settings.tempDry:APP.settings.tempDry-2;
+      const t=base+Math.sin((h-6)*Math.PI/12)*5;
+      const hum=(e.tipo==='lluvia'?70:48)+Math.sin(h*Math.PI/12)*12;
+      document.getElementById('temp').textContent=Math.round(t)+'°C';
+      document.getElementById('humidity').textContent=Math.round(hum)+'%';
+    }
+    updateAlerts();
+  }catch(err){console.error('weather',err);}
+}
+
+function updateAlerts(){
+  const alerts=[];
+  const temp=parseInt(document.getElementById('temp').textContent)||0;
+  const hum=parseInt(document.getElementById('humidity').textContent)||0;
+  const e=getEpoca();
+  if(temp>=35)alerts.push({t:'warning',i:'🌡️',ti:'Calor alto ('+temp+'°C)',d:'Sombra mediodía + riego 2x/día en tesoros y especies sensibles.'});
+  if(hum<40){
+    const con=APP.trees.filter(t=>t.conifer==='si').length;
+    if(con>0)alerts.push({t:'warning',i:'💧',ti:'Humedad baja ('+hum+'%)',d:'Riesgo araña roja en coníferas (común en seco GT). Mister foliar + bandeja de agua bajo maceta.'});
+  }
+  APP.trees.forEach(t=>{
+    const o=t.lastObs;if(!o)return;
+    if(o.verdict==='stop')alerts.push({t:'critical',i:'🛑',ti:'#'+t.num+' '+t.name+': estabilizar',d:o.summary});
+    else if(o.verdict==='transplant')alerts.push({t:'info',i:'🪴',ti:'#'+t.num+' '+t.name+': candidato a trasplante',d:o.summary});
+    else if(o.verdict==='wait')alerts.push({t:'info',i:'⏳',ti:'#'+t.num+' '+t.name+': en recuperación',d:o.summary});
+  });
+  const nunca=APP.trees.filter(t=>!t.lastObs);
+  if(nunca.length>0)alerts.push({t:'info',i:'🔍',ti:nunca.length+' árbol(es) sin observar',d:'Abre cada árbol y registra su primera observación para activar el motor.'});
+  if(alerts.length===0)alerts.push({t:'success',i:'✅',ti:'Todo en orden',d:'Sin banderas activas. Continúa monitoreo en '+e.nombre.toLowerCase()+'.'});
+  document.getElementById('alertsContainer').innerHTML=alerts.map(a=>`<div class="alert ${a.t}"><div class="alert-icon">${a.i}</div><div><div class="alert-title">${a.ti}</div><div class="alert-desc">${a.d}</div></div></div>`).join('');
+}
+
+function openObs(treeId){
+  APP.currentTreeId=treeId;
+  APP.obsState={treeId:treeId,answers:{}};
+  closeModal('modalTreeDetail');
+  const t=getTree(treeId);
+  document.getElementById('obsTitle').textContent='🔍 Observar #'+t.num+' '+t.name;
+  renderObsBase();openModal('modalObs');
+}
+
+function renderObsBase(){
+  const a=APP.obsState.answers;
+  document.getElementById('obsContent').innerHTML=`
+  ${obsQuestion('B1','¿Los brotes recientes se han endurecido (lignificado)?',[['si','Sí, firmes',''],['tiernos','Aún tiernos','warn'],['ninguno','No hay brotes nuevos','warn']],a.B1)}
+  ${obsQuestion('B2','¿Algo raro en el follaje? (plagas, necrosis, marchitez)',[['normal','Todo normal',''],['algo','Veo algo','danger']],a.B2)}
+  ${obsQuestion('B3','¿Raíces saliendo por el drenaje, o agua que no drena al regar?',[['no','No',''],['si','Sí','warn'],['norevise','No revisé','']],a.B3)}
+  <div id="obsDeep"></div><div id="obsResult"></div>`;
+  maybeDeepen();
+}
+
+function obsQuestion(id,text,opts,sel){
+  return `<div class="obs-question"><div class="obs-q-text">${text}</div><div class="obs-options">${opts.map(([val,lbl,cls])=>`<div class="obs-opt ${cls} ${sel===val?'selected':''}" onclick="answerObs('${id}','${val}')">${lbl}</div>`).join('')}</div></div>`;
+}
+
+function answerObs(id,value){APP.obsState.answers[id]=value;renderObsBase();}
+
+function maybeDeepen(){
+  const a=APP.obsState.answers;let deep='';
+  if(a.B1==='tiernos'||a.B1==='ninguno')
+    deep+=obsQuestion('V3','Color del follaje:',[['intenso','Intenso',''],['normal','Normal',''],['palido','Pálido/amarillo','warn']],a.V3);
+  if(a.B2==='algo'){
+    deep+=obsQuestion('E1','¿Necrosis (partes pardas)?',[['no','No',''],['puntas','Puntas/hojas','warn'],['severa','Extendida','danger']],a.E1);
+    deep+=obsQuestion('E2','¿Plagas?',[['no','No',''],['telarana','Telaraña fina','danger'],['polvo','Polvo blanco','danger'],['escama','Escama','danger']],a.E2);
+    deep+=obsQuestion('E3','¿Marchitez que NO cede con riego?',[['no','No',''],['si','Sí','danger']],a.E3);
+  }
+  if(a.B3==='si')
+    deep+=obsQuestion('R2','Al regar, el agua:',[['bien','Drena bien',''],['lento','Drena lento','warn'],['estancada','Se estanca','danger']],a.R2);
+  document.getElementById('obsDeep').innerHTML=deep;
+  evaluateObs();
+}
+
+function evaluateObs(){
+  const a=APP.obsState.answers;const t=getTree(APP.obsState.treeId);
+  const R=document.getElementById('obsResult');
+  if(!a.B1||!a.B2||!a.B3){R.innerHTML='';return;}
+  if(a.B2==='algo'&&(!a.E1||!a.E2||!a.E3)){R.innerHTML='';return;}
+  if((a.B1==='tiernos'||a.B1==='ninguno')&&!a.V3){R.innerHTML='';return;}
+  if(a.B3==='si'&&!a.R2){R.innerHTML='';return;}
+
+  let verdict,cls,icon,title,body='';
+  const estres=(a.E1&&a.E1!=='no')||(a.E2&&a.E2!=='no')||(a.E3==='si');
+  const enRec=hasRecentWork(t)&&a.B1==='tiernos';
+  const tiernoSinTrabajo=a.B1==='tiernos'&&!hasRecentWork(t);
+  const vigorBajo=a.B1==='ninguno'&&a.V3==='palido';
+  const trasplante=a.B3==='si'&&(a.R2==='lento'||a.R2==='estancada');
+
+  if(estres){
+    verdict='stop';cls='stop';icon='🛑';title='Estabiliza primero — no trabajar';
+    body='Hay signos de estrés. Resuelve antes de cualquier trabajo.<br>';
+    if(a.E2==='telarana')body+='• <b>Telaraña</b>: probable araña roja (común en seco GT). Mister foliar c/8h por 3 días, sube humedad.<br>';
+    if(a.E2==='polvo')body+='• <b>Polvo blanco</b>: posible oídio/cochinilla. Aísla, revisa con lupa.<br>';
+    if(a.E2==='escama')body+='• <b>Escama</b>: limpia con alcohol 70% en algodón.<br>';
+    if(a.E1&&a.E1!=='no')body+='• <b>Necrosis</b>: poda zona afectada, revisa riego y sol.<br>';
+    if(a.E3==='si')body+='• <b>Marchitez persistente</b>: riego abundante + sombra 2 días, observa.';
+  }else if(enRec){
+    verdict='wait';cls='wait';icon='⏳';title='En recuperación — espera la señal';
+    body='Hubo trabajo reciente y los brotes aún están tiernos. <b>Estávios:</b> brotes nuevos NO bastan; la recuperación se confirma cuando esos brotes se <b>endurecen</b>. Revisa de nuevo en ~7–10 días. No encadenar trabajo.';
+  }else if(tiernoSinTrabajo){
+    verdict='wait';cls='wait';icon='🌿';title='Crecimiento activo — aún sin consolidar';
+    body='Hay brotes nuevos pero todavía tiernos (sin lignificar). El árbol está creciendo bien, pero <b>Estávios</b> indica trabajar cuando el brote se ha extendido y endurecido, no mientras está tierno. Deja consolidar y revisa en ~7–10 días.';
+  }else if(vigorBajo){
+    verdict='wait';cls='wait';icon='🌱';title='Vigor insuficiente — fertiliza y observa';
+    body='Sin brotes nuevos y color pálido. Fertiliza (NPK suave), asegura luz y riego. No trabajar hasta ver vigor renovado (brotes que se extienden y endurecen).';
+  }else if(trasplante){
+    verdict='transplant';cls='transplant';icon='🪴';title='Candidato a trasplante';
+    const e=getEpoca();
+    body='Sustrato agotado / raíces sin espacio. ';
+    body+=(e.tipo==='transicion')?'<b>Estás en transición seca→lluvia: ventana natural óptima</b> (el árbol despierta).':'Idealmente espera la transición seca→lluvia (abril–mayo), cuando el árbol despierta.';
+    body+='<br>• Poda raíces que dan vueltas, no más del <b>30%</b> en mantenimiento.';
+    if(t.conifer==='si')body+='<br>• <b>PINO/conífera:</b> conserva al menos el <b>50% de la masa de raíces</b> para proteger las <b>micorrizas</b> (esenciales — Estávios).';
+    body+='<div class="pending-flag">⚠️ Pendiente validar con maestros: límite real de poda de raíz (30% mantenimiento vs hasta ⅔ renovación). El material Estávios tiene ambas cifras según contexto.</div>';
+  }else{
+    verdict='go';cls='go';icon='✅';title='Ventana de trabajo abierta';
+    if(t.tier==='tesoro'){
+      title='Vigor OK — pero es TESORO';
+      body='El árbol está fuerte, pero su rol es <b>conservación</b>. Interviene solo si hay necesidad estructural real. ';
+      if(t.conifer==='si')body+='Si algún día trasplantas: conserva ≥50% raíces (micorrizas).';
+    }else if(t.tier==='core'){
+      body='Vigor confirmado (brotes lignificados, sin estrés). <b>Ventana para pinzado / alambrado ligero.</b> ';
+      if(t.conifer==='si')body+='Junípero: pinza brotes que se extienden; no encadenes otro trabajo hasta nueva lignificación.';
+    }else{
+      body='Vigor confirmado. <b>Ventana para pinzado + alambrado.</b> ';
+      if(t.conifer==='no')body+='Caduca/hoja ancha: poda tras el 2º par de foliolos para densificar (Estávios M2); pinza desde la 1ª yema para evitar alargamientos.';
+    }
+  }
+
+  const transversal='<div class="obs-transversal">🔄 ¿Giraste este árbol esta semana? Sol parejo = buena ramificación (Estávios M2).</div>';
+  const safeTitle=title.replace(/'/g,'’');
+  R.innerHTML=`<div class="obs-result ${cls}"><div class="obs-result-title">${icon} ${title}</div><div class="obs-result-body">${body}</div></div>${transversal}<button class="btn btn-primary btn-block mt-2" onclick="saveObs('${verdict}','${safeTitle}')">💾 Guardar observación</button>`;
+}
+
+function hasRecentWork(t){
+  if(!t.logs||t.logs.length===0)return false;
+  const last=t.logs[t.logs.length-1];
+  if(last.type==='Giro (sol parejo)'||last.type==='Fertilización')return false;
+  const days=(Date.now()-new Date(last.date).getTime())/864e5;
+  return days>=0&&days<30;
+}
+
+function saveObs(verdict,title){
+  const t=getTree(APP.obsState.treeId);
+  t.lastObs={date:new Date().toISOString(),verdict:verdict,summary:title,answers:Object.assign({},APP.obsState.answers)};
+  if(verdict==='go')t.vigor=Math.min(5,(t.vigor||3)+1);
+  else if(verdict==='stop')t.vigor=Math.max(1,(t.vigor||3)-1);
+  saveToStorage();closeModal('modalObs');renderVigorGrid();updateAlerts();
+}
+
+function getTree(id){return APP.trees.find(t=>t.id===id);}
+
+function loadSampleData(){
+  APP.trees=[
+    {id:1,num:15,name:'Pino Negro Japonés',species:'Pinus thunbergii',conifer:'si',style:'Literati (Bunjin)',tier:'tesoro',protocol:'TESORO MÁXIMO. Riego 2x/día época seca. Conservación pura.',photos:[],logs:[],vigor:4,lastObs:null,createdAt:new Date().toISOString()},
+    {id:2,num:3,name:'Junípero Procumbens nana',species:'Juniperus procumbens',conifer:'si',style:'Informal erecto (Moyogi)',tier:'core',protocol:'Core. Pinzado cuando brotes se extienden y lignifican.',photos:[],logs:[],vigor:5,lastObs:null,createdAt:new Date().toISOString()},
+    {id:3,num:9,name:'Ébano (Pithecellobium)',species:'Pithecellobium dulce',conifer:'no',style:'Informal erecto (Moyogi)',tier:'desarrollo',protocol:'Tropical nativo GT. Vigoroso. Pinzado frecuente en lluvia.',photos:[],logs:[],vigor:3,lastObs:null,createdAt:new Date().toISOString()}
+  ];
+  saveToStorage();
+}
+
+function addTree(e){
+  e.preventDefault();
+  const nt={id:Math.max(0,...APP.trees.map(t=>t.id))+1,num:parseInt(val('tNum')),name:val('tName'),species:val('tSpecies'),conifer:val('tConifer'),style:val('tStyle'),tier:val('tTier'),protocol:val('tProtocol'),speciesId:val('tSpeciesPick')||null,photos:[],logs:[],vigor:3,lastObs:null,createdAt:new Date().toISOString()};
+  normalizeTree(nt);
+  APP.trees.push(nt);
+  saveToStorage();renderVigorGrid();renderTreesGrid();updateAlerts();
+  closeModal('modalAddTree');document.querySelector('#modalAddTree form').reset();
+}
+function coverPhoto(t){const ph=(t.photos||[]);if(!ph.length)return null;const c=ph.find(p=>p.type&&p.type.indexOf('Frontal')>-1);return (c||ph[0]).data;}
+function stateOf(t){
+  if(!t.lastObs)return{color:'var(--akadama)',label:'Sin observar'};
+  const v=t.lastObs.verdict;
+  const c={go:'var(--st-go)',wait:'var(--st-wait)',stop:'var(--st-stop)',transplant:'var(--st-transplant)'}[v]||'var(--akadama)';
+  return{color:c,label:t.lastObs.summary||'—'};
+}
+function renderTreeCard(t){
+  const cover=coverPhoto(t); const st=stateOf(t);
+  const media=cover?`<img class="card-photo" src="${cover}" alt="#${t.num} ${t.name}">`:`<div class="card-photo card-noimg"><span>#${t.num}</span><small class="eyebrow">sin foto</small></div>`;
+  return `<article class="tree-card tier-${t.tier}" tabindex="0" role="button" aria-label="Ver #${t.num} ${t.name}" onclick="viewTree(${t.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();viewTree(${t.id});}"><div class="card-media">${media}<div class="card-grad"></div><div class="card-meta"><div class="eyebrow">#${t.num} · ${(t.tier||'').toUpperCase()}</div><div class="card-name">${t.name}</div></div></div><div class="state-line" style="--st:${st.color}"><span class="state-rule"></span><span class="state-text">${st.label}</span></div></article>`;
+}
+function obsIcon(v){return v==='go'?'✅':v==='wait'?'⏳':v==='stop'?'🛑':v==='transplant'?'🪴':'•';}
+function renderVigorGrid(){document.getElementById('vigorGrid').innerHTML=APP.trees.map(renderTreeCard).join('');}
+function renderTreesGrid(){document.getElementById('treesGrid').innerHTML=APP.trees.map(renderTreeCard).join('');}
+
+function viewTree(id){
+  APP.currentTreeId=id; const t=getTree(id); if(!t)return;
+  const cover=coverPhoto(t); const st=stateOf(t);
+  const photos=(t.photos||[]); const logs=(t.logs||[]);
+  const media=cover?`<img class="detail-photo" src="${cover}" alt="">`:`<div class="detail-photo card-noimg"><span>#${t.num}</span><small class="eyebrow">sin foto</small></div>`;
+  document.getElementById('detailTitle').innerHTML=`<span class="eyebrow">#${t.num} · ${(t.tier||'').toUpperCase()}</span>`;
+  const tl=(logs.length||photos.length)?buildTimeline(t):'<p class="text-muted text-sm mt-1">Sin trabajos ni fotos aún.</p>';
+  document.getElementById('treeDetailContent').innerHTML=`
+    <div class="detail-media">${media}</div>
+    <div class="state-line state-line--lg" style="--st:${st.color}"><span class="state-rule"></span><span class="state-text">${st.label}</span></div>
+    <h2 class="detail-name">${t.name}</h2>
+    <div class="ficha eyebrow">${t.species||'—'} · ${t.style||'—'}</div>${fichaMeta(t)}
+    <button class="btn btn-primary btn-block" onclick="openObs(${id})">Observar ahora</button>
+    <div class="detail-section"><div class="vigor-lbl">Vigor ${t.vigor}/5</div><input class="vigor-range" type="range" min="1" max="5" value="${t.vigor}" onchange="setVigor(${id},this.value)"></div>
+    <div class="detail-section"><div class="eyebrow">Balcón actual</div><select class="form-select" onchange="setBalcon(${id},this.value)"><option value="">— sin asignar —</option>${BALCONES.map(b=>'<option value="'+b.id+'" '+(t.balcon===b.id?'selected':'')+'>'+b.nombre+'</option>').join('')}</select></div>
+    <div class="detail-section"><div class="flex-between"><span class="eyebrow">Fotos ${photos.length}</span><button class="btn btn-ghost btn-sm2" onclick="openPhoto(${id})">+ Foto</button></div></div>
+    <div class="detail-section"><div class="flex-between"><span class="eyebrow">Línea de tiempo</span><button class="btn btn-ghost btn-sm2" onclick="openLog(${id})">+ Trabajo</button></div>${tl}</div>
+    <div class="detail-section"><div class="eyebrow">Referencias</div>${treeRefs(t)}</div>`;
+  openModal('modalTreeDetail');
+}
+function buildTimeline(t){
+  const items=[];
+  (t.logs||[]).forEach(l=>items.push({date:l.date,kind:'log',title:l.type,desc:l.desc||''}));
+  (t.photos||[]).forEach(p=>items.push({date:p.date,kind:'photo',title:p.type||'Foto',data:p.data}));
+  items.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  return '<div class="timeline">'+items.map(it=>{
+    const d=new Date(it.date).toLocaleDateString('es-GT',{day:'2-digit',month:'short'});
+    const thumb=it.kind==='photo'?`<img class="tl-thumb" src="${it.data}" alt="">`:'<span class="tl-dot"></span>';
+    return `<div class="tl-item">${thumb}<div class="tl-body"><div class="tl-date eyebrow">${d}</div><div class="tl-title">${it.title}</div>${it.desc?`<div class="tl-desc text-sm text-muted">${it.desc}</div>`:''}</div></div>`;
+  }).join('')+'</div>';
+}
+function setVigor(id,v){getTree(id).vigor=parseInt(v);saveToStorage();renderVigorGrid();}
+
+function openPhoto(id){APP.currentTreeId=id;closeModal('modalTreeDetail');openModal('modalAddPhoto');}
+function openLog(id){APP.currentTreeId=id;closeModal('modalTreeDetail');openModal('modalAddLog');}
+
+function addPhoto(e){
+  e.preventDefault();
+  const f=document.getElementById('pFile').files[0];
+  if(!f){alert('Selecciona una foto primero');return;}
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    downscaleImage(ev.target.result,1080,function(small){
+      const t=getTree(APP.currentTreeId); if(!t)return;
+      if(!Array.isArray(t.photos))t.photos=[];
+      t.photos.push({type:val('pType'),date:new Date().toISOString(),notes:val('pNotes'),data:small});
+      saveToStorage();closeModal('modalAddPhoto');viewTree(APP.currentTreeId);renderVigorGrid();
+      document.querySelector('#modalAddPhoto form').reset();
+    });
+  };
+  reader.readAsDataURL(f);
+}
+function downscaleImage(dataUrl,maxSide,cb){
+  try{
+    const img=new Image();
+    img.onload=function(){
+      let w=img.width,h=img.height; const scale=Math.min(1,maxSide/Math.max(w,h));
+      const cw=Math.max(1,Math.round(w*scale)),ch=Math.max(1,Math.round(h*scale));
+      const c=document.createElement('canvas'); c.width=cw; c.height=ch;
+      c.getContext('2d').drawImage(img,0,0,cw,ch);
+      cb(c.toDataURL('image/jpeg',0.82));
+    };
+    img.onerror=function(){cb(dataUrl);};
+    img.src=dataUrl;
+  }catch(_){cb(dataUrl);}
+}
+function addLog(e){
+  e.preventDefault();
+  const t=getTree(APP.currentTreeId);
+  t.logs.push({type:val('wType'),date:val('wDate'),desc:val('wDesc')});
+  saveToStorage();closeModal('modalAddLog');viewTree(APP.currentTreeId);renderVigorGrid();
+  document.querySelector('#modalAddLog form').reset();
+}
+
+function renderGuide(){
+  document.getElementById('guideContent').innerHTML=`
+  <div class="alert info"><div class="alert-icon">🧭</div><div><div class="alert-title">Principio rector (Estávios)</div><div class="alert-desc">"En vez de recordar unas fechas del calendario, aprecie las señales que el árbol le va a dar." Esta app te lleva al árbol; el árbol decide.</div></div></div>
+  <h4 style="color:var(--primary);margin:1rem 0 .5rem">Tiempos de recuperación</h4>
+  <p class="text-sm">La recuperación NO son días fijos. Se confirma cuando los brotes nuevos se <b>endurecen (lignifican)</b>. Brotes y hojas nuevas por sí solos no bastan. No encadenes trabajos sobre un árbol que aún no lignificó.</p>
+  <h4 style="color:var(--primary);margin:1rem 0 .5rem">Trasplante</h4>
+  <p class="text-sm">Cuando las raíces dan vueltas o salen por el drenaje. En GT, mejor en la transición seca→lluvia (abril–mayo), cuando el árbol despierta. Capa de drenaje (roca volcánica/akadama), malla en agujeros, anclar con alambre.</p>
+  <div class="pending-flag">⚠️ Poda de raíz: Estávios da "no más del 30%" (mantenimiento) y "1/3 a 2/3" (renovación). PENDIENTE confirmar con tus maestros cuál aplica por especie/contexto.</div>
+  <h4 style="color:var(--primary);margin:1rem 0 .5rem">Pinos — micorrizas</h4>
+  <p class="text-sm">Al trasplantar pinos, conserva al menos el <b>50% de la masa de raíces</b> para proteger las micorrizas, esenciales para su supervivencia. Aplica a tus tesoros #1, #7, #14, #15, #17.</p>
+  <div class="pending-flag">⚠️ ¿Pino caribe/nacional (#7) tropical sigue la misma regla de micorrizas que pinos templados? Validar con maestros.</div>
+  <h4 style="color:var(--primary);margin:1rem 0 .5rem">Alambrado</h4>
+  <p class="text-sm">Alambre = 1/3 del grosor de la rama, ángulo 45°. Torsiones grandes en reposo. Aluminio para empezar. <b>Vigila y retira antes de que marque la corteza.</b> Coníferas se alambran más (monopodial); caducas más poda (simpodial).</p>
+  <h4 style="color:var(--primary);margin:1rem 0 .5rem">Construcción de rama (caduca)</h4>
+  <p class="text-sm">Dejar engrosar la rama, podar tras el 2º par de foliolos, pinzar desde la 1ª yema para evitar alargamientos. Técnica lenta, resultado natural.</p>
+  <h4 style="color:var(--primary);margin:1rem 0 .5rem">Regla transversal</h4>
+  <p class="text-sm">🔄 Gira cada árbol semanalmente para sol parejo por todos los lados. Error común no hacerlo.</p>`;
+}
+
+function generateReport(){
+  let c=`REPORTE — ${APP.settings.name}\n${new Date().toLocaleDateString('es-GT')}\nÉpoca: ${getEpoca().nombre}\n\n`;
+  c+=`Total: ${APP.trees.length} | Tesoros: ${APP.trees.filter(t=>t.tier==='tesoro').length} | Core: ${APP.trees.filter(t=>t.tier==='core').length} | Desarrollo: ${APP.trees.filter(t=>t.tier==='desarrollo').length}\n\n`;
+  APP.trees.forEach(t=>{
+    c+=`#${t.num} ${t.name} (${t.species})\n  Tier: ${t.tier} | Vigor: ${t.vigor}/5 | Fotos: ${t.photos.length} | Trabajos: ${t.logs.length}\n`;
+    if(t.lastObs)c+=`  Última obs: ${t.lastObs.summary} (${new Date(t.lastObs.date).toLocaleDateString('es-GT')})\n`;
+    c+='\n';
+  });
+  const el=document.createElement('a');
+  el.href='data:text/plain;charset=utf-8,'+encodeURIComponent(c);
+  el.download=`Reporte_Bonsai_${new Date().toISOString().slice(0,10)}.txt`;el.click();
+}
+function renderReportSummary(){
+  const counts={go:0,wait:0,stop:0,transplant:0,none:0};
+  APP.trees.forEach(t=>counts[t.lastObs?t.lastObs.verdict:'none']++);
+  document.getElementById('reportSummary').innerHTML=`
+    <div class="alert success"><div class="alert-icon">✅</div><div><div class="alert-title">${counts.go} con ventana de trabajo</div></div></div>
+    <div class="alert info"><div class="alert-icon">⏳</div><div><div class="alert-title">${counts.wait} en recuperación/observación</div></div></div>
+    <div class="alert critical"><div class="alert-icon">🛑</div><div><div class="alert-title">${counts.stop} requieren estabilizar</div></div></div>
+    <div class="alert info"><div class="alert-icon">🪴</div><div><div class="alert-title">${counts.transplant} candidatos a trasplante</div></div></div>
+    <div class="alert warning"><div class="alert-icon">🔍</div><div><div class="alert-title">${counts.none} sin observar</div></div></div>`;
+}
+
+function switchTab(name,e){
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  if(e)e.target.classList.add('active');
+  if(name==='trees')renderTreesGrid();
+  if(name==='calendario')renderCalendario();
+  if(name==='asoleamiento')renderAsol();
+  if(name==='referencias')renderReferencias();
+  if(name==='guide')renderGuide();
+  if(name==='report')renderReportSummary();
+  if(name==='dashboard'){renderEpoca();updateAlerts();renderVigorGrid();}
+}
+
+function saveToStorage(){localStorage.setItem('mirai_gt_v11',JSON.stringify({trees:APP.trees,settings:APP.settings,referencias:APP.referencias}));}
+function loadFromStorage(){
+  const d=localStorage.getItem('mirai_gt_v11');
+  if(!d)return;
+  try{
+    const p=JSON.parse(d);
+    APP.trees=(p.trees||[]).map(normalizeTree).filter(Boolean);
+    APP.settings=Object.assign(APP.settings,p.settings||{});
+    APP.referencias=Array.isArray(p.referencias)?p.referencias:[];
+  }catch(err){
+    console.error('localStorage corrupto — respaldo y reinicio de datos',err);
+    try{localStorage.setItem('mirai_gt_v11_corrupto_'+Date.now(),d);}catch(_){}
+    APP.trees=[];
+  }
+  setVal('setName',APP.settings.name);setVal('setLocation',APP.settings.location);setVal('setTempDry',APP.settings.tempDry);setVal('setWeatherKey',APP.settings.weatherKey);
+}
+function saveSettings(){
+  APP.settings.name=val('setName');APP.settings.location=val('setLocation');
+  APP.settings.tempDry=parseInt(val('setTempDry'))||26;APP.settings.weatherKey=val('setWeatherKey');
+  saveToStorage();updateWeather();alert('✅ Configuración guardada');
+}
+function exportData(){
+  const el=document.createElement('a');
+  el.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify({trees:APP.trees,settings:APP.settings,referencias:APP.referencias},null,2));
+  el.download=`MiraiGT_backup_${new Date().toISOString().slice(0,10)}.json`;el.click();
+}
+function importData(){
+  const i=document.createElement('input');i.type='file';i.accept='.json';
+  i.onchange=e=>{const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);APP.trees=(d.trees||[]).map(normalizeTree).filter(Boolean);APP.settings=Object.assign(APP.settings,d.settings||{});APP.referencias=Array.isArray(d.referencias)?d.referencias:[];saveToStorage();location.reload();}catch(err){alert('Archivo inválido');}};r.readAsText(e.target.files[0]);};i.click();
+}
+function clearAllData(){if(confirm('⚠️ ¿Borrar TODO? No se puede deshacer.')){localStorage.removeItem('mirai_gt_v11');location.reload();}}
+
+function openModal(id){document.getElementById(id).classList.add('active');}
+function closeModal(id){document.getElementById(id).classList.remove('active');}
+function val(id){return document.getElementById(id).value;}
+function setVal(id,v){const el=document.getElementById(id);if(el)el.value=v;}
+
+window.addEventListener('load',init);
+</script>
+</body>
+</html>
