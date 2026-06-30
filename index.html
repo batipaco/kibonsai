@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kibonsai — bonsái para Guatemala y el trópico</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#14110E">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kibonsai">
 <style>
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -25,7 +32,7 @@ body{font-family:var(--font-ui);background:var(--volcanico);color:var(--hueso);m
 :focus-visible{outline:2px solid var(--akadama);outline-offset:2px}
 
 /* Header */
-header{position:sticky;top:0;z-index:100;background:rgba(20,17,14,.86);backdrop-filter:blur(8px);border-bottom:1px solid var(--sustrato-2)}
+header{position:sticky;top:0;z-index:100;padding-top:env(safe-area-inset-top);background:rgba(20,17,14,.86);backdrop-filter:blur(8px);border-bottom:1px solid var(--sustrato-2)}
 .header-c{max-width:1100px;margin:0 auto;padding:.8rem 1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
 .brand{font-family:var(--font-display);font-size:1.25rem;letter-spacing:.02em;color:var(--hueso)}
 .brand-gt{color:var(--akadama)}
@@ -201,6 +208,37 @@ header{position:sticky;top:0;z-index:100;background:rgba(20,17,14,.86);backdrop-
 .welcome-point{display:flex;gap:.7rem;align-items:flex-start;margin-bottom:.8rem;font-size:.92rem;color:var(--hueso-mute);line-height:1.5}
 .welcome-point b{color:var(--hueso)}
 .welcome-rule{width:3px;align-self:stretch;min-height:2.4em;background:var(--st);border-radius:2px;flex:none}
+.lugar-list{display:flex;flex-direction:column;gap:.5rem;margin-top:.6rem}
+.lugar-row{display:flex;justify-content:space-between;align-items:center;background:var(--sustrato);border-radius:10px;padding:.7rem .85rem;border-left:3px solid var(--akadama)}
+.lugar-n{font-family:var(--font-display);font-size:1rem;margin-bottom:.1rem}
+.btn-x{background:none;border:none;color:var(--hueso-mute);font-size:1.4rem;line-height:1;cursor:pointer;padding:0 .3rem;flex:none}
+.btn-x:hover{color:var(--st-stop)}
+.sol-val{font-family:var(--font-display);font-size:1.15rem;color:var(--akadama);margin:.35rem 0 .1rem}
+.sol-range{width:100%;accent-color:var(--follaje);margin:.2rem 0}
+.sol-fb{display:block;margin-top:.45rem;font-size:.92rem;line-height:1.45}
+.sol-fb.feliz{color:var(--st-go)}.sol-fb.mas{color:var(--st-wait)}.sol-fb.menos{color:var(--st-stop)}
+.sol-pill{font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;padding:.16rem .45rem;border-radius:6px}
+.sol-pill.feliz{background:var(--st-go);color:var(--volcanico)}.sol-pill.mas{background:var(--st-wait);color:var(--volcanico)}.sol-pill.menos{background:var(--st-stop);color:var(--hueso)}
+.cv-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:.8rem;padding-bottom:.5rem}
+.cv-wrap{position:relative;min-width:580px}
+.cv-now{position:absolute;top:0;bottom:18px;width:2px;background:var(--oro);z-index:3;opacity:.85}
+.cv-lane{position:relative;height:30px;margin-bottom:6px}
+.cv-header{height:22px;margin-bottom:8px}
+.cv-month{position:absolute;top:0;height:100%;display:flex;align-items:center;justify-content:center;font-size:.62rem;color:var(--hueso-mute);border-radius:4px}
+.cv-month.seco{background:rgba(200,149,74,.13)}
+.cv-month.transicion{background:rgba(168,178,126,.15)}
+.cv-month.lluvia{background:rgba(94,126,148,.18)}
+.cv-catname{font-family:var(--font-display);font-size:.95rem;color:var(--hueso);margin:.7rem 0 .45rem}
+.cv-pill{position:absolute;top:3px;height:24px;border-radius:6px;display:flex;align-items:center;padding:0 .5rem;overflow:hidden;font-size:.64rem;white-space:nowrap;color:var(--volcanico)}
+.cv-pill span{overflow:hidden;text-overflow:ellipsis}
+.cv-pill.principal{background:var(--st-go)}
+.cv-pill.secundaria{background:var(--st-wait)}
+.cv-pill.evitar{background:rgba(181,86,63,.4);color:var(--hueso)}
+.cv-pill.principal,.cv-pill.secundaria{cursor:pointer}
+.cv-legend{display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;font-size:.64rem;color:var(--hueso-mute);margin-top:.6rem}
+.cv-dot{width:10px;height:10px;border-radius:3px;display:inline-block;margin-left:.55rem}
+.cv-dot.principal{background:var(--st-go)}.cv-dot.secundaria{background:var(--st-wait)}.cv-dot.evitar{background:rgba(181,86,63,.5)}
+.cv-nowdot{width:2px;height:12px;background:var(--oro);display:inline-block;margin-left:.55rem}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 </style>
@@ -208,12 +246,12 @@ header{position:sticky;top:0;z-index:100;background:rgba(20,17,14,.86);backdrop-
 <body>
 <header>
 <div class="header-c">
-<div class="brand">Kibon<span class="brand-gt">sai</span></div>
+<div class="brand">Kibo<span class="brand-gt">nsai</span></div>
 <nav class="nav" aria-label="Secciones">
 <button class="nav-btn active" onclick="switchTab('dashboard',event)">Inicio</button>
 <button class="nav-btn" onclick="switchTab('trees',event)">Colección</button>
 <button class="nav-btn" onclick="switchTab('calendario',event)">Calendario</button>
-<button class="nav-btn" onclick="switchTab('asoleamiento',event)">Sol</button>
+<button class="nav-btn" onclick="switchTab('asoleamiento',event)">Luz</button>
 <button class="nav-btn" onclick="switchTab('referencias',event)">Maestros</button>
 <button class="nav-btn" onclick="switchTab('guide',event)">Guía</button>
 <button class="nav-btn" onclick="switchTab('report',event)">Reporte</button>
@@ -264,7 +302,7 @@ header{position:sticky;top:0;z-index:100;background:rgba(20,17,14,.86);backdrop-
 
 <div id="asoleamiento" class="tab-content">
   <div class="section">
-    <h3 class="section-title">Asoleamiento</h3>
+    <h3 class="section-title">Luz y lugares</h3>
     <div id="asolContent"></div>
   </div>
 </div>
@@ -317,6 +355,8 @@ header{position:sticky;top:0;z-index:100;background:rgba(20,17,14,.86);backdrop-
       <select class="form-select" id="setRecordatorio"><option value="7">7 días</option><option value="14">14 días</option><option value="30">30 días</option></select>
       <button class="btn btn-primary btn-block mt-1" onclick="saveSettings()">Guardar</button>
       <button class="btn btn-secondary btn-block mt-1" onclick="openModal('modalWelcome')">Ver intro otra vez</button>
+      <button class="btn btn-secondary btn-block mt-1" onclick="activarNotificaciones()">Activar recordatorios</button>
+      <button class="btn btn-secondary btn-block mt-1" onclick="instalarApp()">Instalar app</button>
     </div>
     <div class="mt-2">
       <label class="form-label">Respaldo de Datos</label>
@@ -391,6 +431,17 @@ header{position:sticky;top:0;z-index:100;background:rgba(20,17,14,.86);backdrop-
 </div>
 </div>
 
+<div id="modalAddLugar" class="modal">
+<div class="modal-content">
+<div class="modal-header"><h2 class="modal-title">Nuevo lugar</h2><button class="close-modal" onclick="closeModal('modalAddLugar')">×</button></div>
+<form onsubmit="addLugar(event)">
+<div class="form-group"><label class="form-label">Nombre del lugar</label><input class="form-input" id="lugNombre" placeholder="Patio, corredor, bajo el árbol, azotea..." required></div>
+<div class="form-group"><label class="form-label">Horas de sol directo al día</label><select class="form-select" id="lugHoras"><option value="6+">Más de 6 h — pleno sol</option><option value="4-6">4 a 6 h — sol fuerte</option><option value="2-4">2 a 4 h — media sombra</option><option value="<2">Menos de 2 h — sombra</option></select></div>
+<button type="submit" class="btn btn-primary btn-block">Guardar lugar</button>
+</form>
+</div>
+</div>
+
 <div id="modalObs" class="modal">
 <div class="modal-content">
 <div class="modal-header"><h2 class="modal-title" id="obsTitle">🔍 Observar árbol</h2><button class="close-modal" onclick="closeModal('modalObs')">×</button></div>
@@ -424,7 +475,7 @@ header{position:sticky;top:0;z-index:100;background:rgba(20,17,14,.86);backdrop-
 </div>
 
 <script>
-const APP={trees:[],currentTreeId:null,obsState:{},settings:{name:'Colección Paco Arriaza',location:'Ciudad de Guatemala, rooftop',tempDry:26,weatherKey:'',recordatorioDias:14}};
+const APP={trees:[],currentTreeId:null,obsState:{},settings:{name:'Colección Paco Arriaza',location:'Ciudad de Guatemala, rooftop',tempDry:26,weatherKey:'',recordatorioDias:14,notif:false}};
 
 /* ===== v1.3 CP2: catálogo de especies tropicalizado (Estávios + GT) ===== */
 const SPECIES=[
@@ -517,24 +568,33 @@ const CALENDARIO=[
 ];
 function calCategoria(t){const tp=t.tipo||deriveMeta(t).tipo;return tp==='conifera'?'conifera':tp==='caduca'?'caduca':'tropical';}
 function calLabel(c){return c==='conifera'?'Coníferas':c==='caduca'?'Caducas':'Tropicales / perennes';}
+function mesEpoca(i){if(i===3||i===4)return 'transicion';if(i>=5&&i<=9)return 'lluvia';return 'seco';}
+function epocaSpan(ep){if(ep==='transicion')return [[3,4]];if(ep==='lluvia')return [[5,9]];return [[10,11],[0,2]];}
 function renderCalendario(){
-  const ep=getEpoca().tipo;
-  const epLbl={seco:'Época seca',transicion:'Transición',lluvia:'Época lluviosa'}[ep]||ep;
-  const seg=['seco','transicion','lluvia'].map(x=>`<span class="cal-seg ${x===ep?'on':''}">${x==='seco'?'Seco':x==='transicion'?'Transición':'Lluvia'}</span>`).join('<span class="cal-arrow">›</span>');
-  let html=`<div class="cal-timeline">${seg}</div><p class="text-sm text-muted mt-1">Estás en <b>${epLbl}</b>. El calendario ubica las ventanas; al tocar, te lleva a observar — el árbol decide.</p>`;
+  const meses=['E','F','M','A','M','J','J','A','S','O','N','D'];
+  const ahora=new Date().getMonth();
+  const nowPct=((ahora+0.5)/12*100).toFixed(2);
+  let html='<p class="text-sm text-muted">El año en seco · transición · lluvia. Las píldoras son ventanas de atención: tocá una para ver tus árboles y abrir el motor. El árbol decide.</p>';
+  html+='<div class="cv-scroll"><div class="cv-wrap">';
+  html+=`<div class="cv-now" style="left:${nowPct}%"></div>`;
+  html+='<div class="cv-lane cv-header">'+meses.map((m,i)=>`<div class="cv-month ${mesEpoca(i)}" style="left:${(i/12*100).toFixed(2)}%;width:${(100/12).toFixed(2)}%">${m}</div>`).join('')+'</div>';
   ['conifera','tropical','caduca'].forEach(cat=>{
-    const rows=CALENDARIO.filter(c=>c.epoca===ep&&c.categoria===cat);
+    const rows=CALENDARIO.filter(c=>c.categoria===cat);
     if(!rows.length)return;
-    const n=APP.trees.filter(t=>calCategoria(t)===cat).length;
-    html+=`<div class="cal-cat"><div class="cal-cat-h"><span class="cal-cat-name">${calLabel(cat)}</span><span class="eyebrow">${n} árbol${n===1?'':'es'}</span></div>`;
+    html+=`<div class="cv-catname">${calLabel(cat)}</div>`;
     rows.forEach(r=>{
-      const cls=r.intensidad;
-      const badge=cls==='principal'?'Gran ventana':cls==='secundaria'?'Ventana menor':'Evitar ahora';
-      const act=(cls!=='evitar')?`<button class="btn btn-ghost btn-sm2" onclick="openCalWindow('${cat}','${r.ventana.replace(/'/g,'’')}')">Ver mis ${calLabel(cat).toLowerCase()}</button>`:'';
-      html+=`<div class="cal-win ${cls}"><div class="cal-win-top"><span class="cal-badge ${cls}">${badge}</span><span class="cal-win-name">${r.ventana}</span></div><div class="cal-win-sig text-sm text-muted">Vigilar: ${r.senal_a_vigilar}</div>${act}</div>`;
+      const spans=epocaSpan(r.epoca);
+      let pills='';
+      spans.forEach(sp=>{
+        const left=(sp[0]/12*100).toFixed(2), width=((sp[1]-sp[0]+1)/12*100).toFixed(2);
+        const clk=r.intensidad!=='evitar'?`onclick="openCalWindow('${cat}','${r.ventana.replace(/'/g,'’')}')"`:'';
+        pills+=`<div class="cv-pill ${r.intensidad}" ${clk} style="left:${left}%;width:${width}%" title="${r.ventana}"><span>${r.ventana}</span></div>`;
+      });
+      html+=`<div class="cv-lane">${pills}</div>`;
     });
-    html+='</div>';
   });
+  html+='</div></div>';
+  html+='<div class="cv-legend"><span class="cv-dot principal"></span>Gran ventana<span class="cv-dot secundaria"></span>Menor<span class="cv-dot evitar"></span>Evitar<span class="cv-nowdot"></span>Hoy</div>';
   const ce=document.getElementById('calendarioContent'); if(ce)ce.innerHTML=html;
 }
 function openCalWindow(cat,ventana){
@@ -579,31 +639,42 @@ function suggestBalcon(luz,reg){
   return {bal:se, why:'sol de mañana, sombra de tarde'};
 }
 function setBalcon(id,v){const t=getTree(id); if(t){t.balcon=v||null; saveToStorage();}}
+function idealLuz(luz){return luz==='pleno'?[5,8]:luz==='parcial'?[4,6]:luz==='sombra'?[2,4]:[3,6];}
+function recommendedHoras(t){const r=idealLuz(t.luz||deriveMeta(t).luz);return Math.round((r[0]+r[1])/2);}
+function solHorasDe(t){return (t.solHoras!=null)?t.solHoras:recommendedHoras(t);}
+function solEstado(t){const r=idealLuz(t.luz||deriveMeta(t).luz);const h=solHorasDe(t);if(h<r[0])return{cls:'mas',label:'Quiere más sol'};if(h>r[1])return{cls:'menos',label:'Demasiado sol'};return{cls:'feliz',label:'Feliz'};}
+function solFeedback(t){
+  const r=idealLuz(t.luz||deriveMeta(t).luz); const h=solHorasDe(t);
+  let cls,txt;
+  if(h<r[0]){cls='mas';txt='A tu '+t.name+' le encantaría más sol — buscale un lugar más despejado.';}
+  else if(h>r[1]){cls='menos';txt='Es bastante sol para tu '+t.name+'. En seco, dale malla/zaran o sombra de tarde.';}
+  else{cls='feliz';txt='¡Cabal! A tu '+t.name+' le gusta esta luz.';}
+  return '<span class="sol-fb '+cls+'">'+txt+'</span>';
+}
+function onSol(id,v){const t=getTree(id);if(!t)return;t.solHoras=parseInt(v);saveToStorage();
+  const hv=document.getElementById('solH-'+id);if(hv)hv.textContent=t.solHoras;
+  const fb=document.getElementById('solFb-'+id);if(fb)fb.innerHTML=solFeedback(t);
+}
+function expoLabel(h){return h==='6+'?'Pleno sol (6+ h)':h==='4-6'?'Sol fuerte (4–6 h)':h==='2-4'?'Media sombra (2–4 h)':'Sombra (<2 h)';}
+function lugares(){return (APP.settings&&APP.settings.lugares)||[];}
+function seedLugares(){if(!APP.settings.lugares||!APP.settings.lugares.length){APP.settings.lugares=[{id:'sol_pleno',nombre:'A pleno sol',horas:'6+'},{id:'sol_manana',nombre:'Sol de mañana',horas:'4-6'},{id:'media_sombra',nombre:'Media sombra',horas:'2-4'}];}}
+function addLugar(e){e.preventDefault();const n=val('lugNombre');if(!n)return;if(!APP.settings.lugares)APP.settings.lugares=[];APP.settings.lugares.push({id:'lug_'+Date.now(),nombre:n,horas:val('lugHoras')});saveToStorage();closeModal('modalAddLugar');document.querySelector('#modalAddLugar form').reset();renderAsol();}
+function delLugar(id){APP.settings.lugares=lugares().filter(l=>l.id!==id);APP.trees.forEach(t=>{if(t.lugarId===id)t.lugarId=null;});saveToStorage();renderAsol();}
+function setLugar(id,v){const t=getTree(id);if(t){t.lugarId=v||null;saveToStorage();}}
 function renderAsol(){
-  const reg=currentSolarRegime();
-  const regLbl={sol_norte:'Sol al norte (verano)',cenital:'Cenital (sol vertical)',sol_sur_bajo:'Sol bajo al sur (invierno)',transicion_sol:'Transición solar (equinoccio)'}[reg];
-  const order=['sol_sur_bajo','transicion_sol','cenital','sol_norte'];
-  const segLbl={sol_sur_bajo:'Sur bajo',transicion_sol:'Equinoccio',cenital:'Cenital',sol_norte:'Norte'};
-  let html='<div class="cal-timeline">'+order.map(x=>`<span class="cal-seg ${x===reg?'on':''}">${segLbl[x]}</span>`).join('<span class="cal-arrow">·</span>')+'</div>';
-  html+=`<p class="text-sm text-muted mt-1">Régimen solar: <b>${regLbl}</b>. Este reloj es <b>solar</b>, no de lluvia. Ningún vecino te tapa: estas son tus horas de sol en el barandal.</p>`;
-  html+='<div class="asol-balcones">'+BALCONES.map(b=>{
-    const w=b.exposicion[reg]||'—'; const h=balconHoras(b,reg).toFixed(1);
-    return `<div class="asol-bal"><div class="asol-bal-n">${b.nombre}</div><div class="eyebrow">${b.azimut}° · ${b.calidad}</div><div class="asol-bal-w">${w} <span class="text-muted">(${h} h)</span></div></div>`;
-  }).join('')+'</div>';
-  html+='<h4 class="asol-h">Ubicación sugerida</h4>';
+  seedLugares();
+  const ep=getEpoca().tipo;
+  let html='<p class="text-sm text-muted">Decile a la app cuántas horas de sol recibe cada árbol (en su detalle) y te dice si está feliz, quiere más, o le sobra.</p>';
+  if(ep==='seco')html+='<div class="pending-flag">En época seca el sol pega más fuerte: a las especies de sombra dales malla/zaran o movelas tantito al fresco.</div>';
+  html+='<h4 class="asol-h">Luz por árbol</h4>';
   html+='<div class="cal-list">'+APP.trees.map(t=>{
-    const m=deriveMeta(t); const luz=t.luz||m.luz;
-    const sug=suggestBalcon(luz,reg); const bal=sug.bal;
-    const cur=t.balcon?BALCONES.find(b=>b.id===t.balcon):null;
-    const mism=cur&&cur.id!==bal.id;
-    const cover=coverPhoto(t);
-    const thumb=cover?`<img class="cal-thumb" src="${cover}" alt="">`:`<span class="cal-thumb cal-thumb-x">#${t.num}</span>`;
-    let line=`Luz: ${luzLabel(luz)} → <b>${bal.nombre}</b> <span class="text-muted">(${sug.why})</span>`;
-    if(mism)line+=`<div class="pending-flag">Está en ${cur.nombre} → mover a ${bal.nombre}</div>`;
-    if(luz==='sombra'&&balconHoras(bal,reg)>5)line+='<div class="text-sm text-muted mt-1">Mucho sol para especie de sombra → fondo del balcón o malla 30%.</div>';
-    return `<div class="cal-row" style="cursor:default">${thumb}<div class="cal-row-b"><div class="cal-row-n">#${t.num} ${t.name}</div><div class="text-sm">${line}</div></div></div>`;
+    const est=solEstado(t); const h=solHorasDe(t);
+    const cover=coverPhoto(t); const thumb=cover?`<img class="cal-thumb" src="${cover}" alt="">`:`<span class="cal-thumb cal-thumb-x">#${t.num}</span>`;
+    return `<div class="cal-row" onclick="viewTree(${t.id})">${thumb}<div class="cal-row-b"><div class="cal-row-n">#${t.num} ${t.name}</div><div class="text-sm"><span class="sol-pill ${est.cls}">${est.label}</span> · ${h} h de sol</div></div></div>`;
   }).join('')+'</div>';
-  html+='<p class="text-sm text-muted mt-2">Barandal = máximo sol · fondo = sombra (sobre todo cerca del cenit). Al cambiar de régimen solar, revisá ubicaciones.</p>';
+  html+='<h4 class="asol-h">Lugares (opcional)</h4>';
+  html+='<div class="flex-between"><span class="eyebrow">Para organizar tu colección</span><button class="btn btn-ghost btn-sm2" onclick="openModal(\'modalAddLugar\')">+ Lugar</button></div>';
+  html+='<div class="lugar-list">'+lugares().map(l=>`<div class="lugar-row"><div><div class="lugar-n">${l.nombre}</div><div class="eyebrow">${expoLabel(l.horas)}</div></div><button class="btn-x" onclick="delLugar('${l.id}')" aria-label="Quitar">×</button></div>`).join('')+'</div>';
   const e=document.getElementById('asolContent'); if(e)e.innerHTML=html;
 }
 
@@ -695,14 +766,44 @@ function normalizeTree(t){
   const _m=deriveMeta(t);
   if(!t.tipo)t.tipo=_m.tipo;
   if(!t.luz)t.luz=_m.luz;
+  if(t.balcon&&!t.lugarId){t.lugarId=({se:'sol_manana',nw:'sol_pleno',sw:'sol_pleno'})[t.balcon]||null;}
   return t;
 }
 
 function init(){
   loadFromStorage();
   if(APP.trees.length===0)loadSampleData();
-  renderEpoca();updateWeather();updateAlerts();renderVigorGrid();populateSpeciesPicker();seedReferencias();maybeWelcome();
+  renderEpoca();updateWeather();updateAlerts();renderVigorGrid();populateSpeciesPicker();seedReferencias();seedLugares();maybeWelcome();
   setInterval(updateWeather,600000);
+  notificarPendientes();
+}
+// ===== PWA: service worker, instalación y notificaciones =====
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;});
+function instalarApp(){
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.finally(()=>{deferredPrompt=null;});}
+  else{alert('Para instalar Kibonsai:\n\n• iPhone (Safari): tocá Compartir y luego “Agregar a inicio”.\n• Android (Chrome): menú ⋮ y luego “Instalar app”.');}
+}
+function activarNotificaciones(){
+  if(!('Notification' in window)){alert('Tu navegador no soporta notificaciones.');return;}
+  Notification.requestPermission().then(perm=>{
+    if(perm==='granted'){APP.settings.notif=true;saveToStorage();alert('¡Cabal! Te avisaré cuando toque revisar un árbol.\n\nEn iPhone: agregá Kibonsai a inicio para que las notificaciones funcionen.');notificarPendientes(true);}
+    else{alert('No diste permiso. Podés activarlo luego desde Ajustes.');}
+  });
+}
+function notificarPendientes(force){
+  try{
+    if(!('Notification' in window)||Notification.permission!=='granted')return;
+    if(!(APP.settings&&APP.settings.notif)&&!force)return;
+    const pend=APP.trees.filter(tocaObservar);
+    if(!pend.length)return;
+    const titulo=pend.length===1?('Toca revisar #'+pend[0].num+' '+pend[0].name):('Tenés '+pend.length+' árboles que toca revisar');
+    const cuerpo=pend.length===1?('No lo observás hace '+diasSinObservar(pend[0])+' días. ¿Cómo andan sus brotes?'):'Fijate cómo andan — el árbol decide.';
+    if(navigator.serviceWorker&&navigator.serviceWorker.ready){
+      navigator.serviceWorker.ready.then(reg=>reg.showNotification(titulo,{body:cuerpo,icon:'icon-192.png',badge:'icon-192.png',tag:'kibonsai-recordatorio'})).catch(()=>{try{new Notification(titulo,{body:cuerpo,icon:'icon-192.png'});}catch(_){}});
+    }else{try{new Notification(titulo,{body:cuerpo});}catch(_){}}
+  }catch(_){}
 }
 
 function getEpoca(){
@@ -1000,7 +1101,8 @@ function viewTree(id){
     <button class="btn btn-primary btn-block" onclick="openObs(${id})">Observar ahora</button>
     <button class="btn btn-secondary btn-block mt-1" onclick="compartirArbol(${id})">Compartir</button>
     <div class="detail-section"><div class="vigor-lbl">Vigor ${t.vigor}/5</div><input class="vigor-range" type="range" min="1" max="5" value="${t.vigor}" onchange="setVigor(${id},this.value)"></div>
-    <div class="detail-section"><div class="eyebrow">Balcón actual</div><select class="form-select" onchange="setBalcon(${id},this.value)"><option value="">— sin asignar —</option>${BALCONES.map(b=>'<option value="'+b.id+'" '+(t.balcon===b.id?'selected':'')+'>'+b.nombre+'</option>').join('')}</select></div>
+    <div class="detail-section"><div class="eyebrow">Luz solar</div><div class="sol-val"><span id="solH-${id}">${solHorasDe(t)}</span> h de sol directo al día</div><input class="sol-range" type="range" min="0" max="8" step="1" value="${solHorasDe(t)}" oninput="onSol(${id},this.value)" aria-label="Horas de sol"><div id="solFb-${id}">${solFeedback(t)}</div></div>
+    <div class="detail-section"><div class="eyebrow">Lugar actual</div><select class="form-select" onchange="setLugar(${id},this.value)"><option value="">— sin asignar —</option>${lugares().map(l=>'<option value="'+l.id+'" '+(t.lugarId===l.id?'selected':'')+'>'+l.nombre+'</option>').join('')}</select></div>
     <div class="detail-section"><div class="flex-between"><span class="eyebrow">Fotos ${photos.length}</span><button class="btn btn-ghost btn-sm2" onclick="openPhoto(${id})">+ Foto</button></div></div>
     <div class="detail-section"><div class="flex-between"><span class="eyebrow">Línea de tiempo</span><button class="btn btn-ghost btn-sm2" onclick="openLog(${id})">+ Trabajo</button></div>${tl}</div>
     <div class="detail-section"><div class="eyebrow">Referencias</div>${treeRefs(t)}</div>`;

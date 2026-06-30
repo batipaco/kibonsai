@@ -1,0 +1,17 @@
+{
+  "name": "Kibonsai",
+  "short_name": "Kibonsai",
+  "description": "Bonsái para Guatemala y el trópico — observación fenológica en vez de calendario fijo.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#14110E",
+  "theme_color": "#14110E",
+  "lang": "es-GT",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
